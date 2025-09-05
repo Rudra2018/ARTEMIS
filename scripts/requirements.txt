@@ -1,0 +1,8 @@
+pandas
+requests
+pydantic
+google-cloud-bigquery
+google-auth
+python-dotenv
+notion-client
+tqdm
