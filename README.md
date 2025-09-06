@@ -8,7 +8,8 @@ Test the security of **Google Gemini**, **Meta AI**, **ChatGPT**, **Claude**, an
 - 🔁 GitHub Actions CI/CD
 
 ## 🧱 Architecture
-ser ─▶ Prompt Runner ─▶ Provider (Gemini / GPT / Claude / Meta / Hai)
+
+User ─▶ Prompt Runner ─▶ Provider (Gemini / GPT / Claude / Meta / Hai)
 │
 ▼
 AI Engines (Risk / DLP / Halluc.)
