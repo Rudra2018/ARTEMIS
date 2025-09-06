@@ -20,7 +20,7 @@ BigQuery Notion
 
 ## 🧱 Architecture Diagram
 
-![Architecture](ai_chatbot_security_architecture.png,png)
+![Architecture](ai_chatbot_security_architecture.png)
 
 ## ⚙️ Setup (Quick)
 ```bash
