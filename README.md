@@ -66,8 +66,6 @@ python scripts/run_owasp_tests.py --out reports/owasp_results.csv
 ```bash
 python scripts/run_gerake_tests.py --provider claude --testcases examples/gerake_suite.yaml
 ```
-`examples/gerake_suite.yaml` ships with prompt-injection, PII exfiltration, and jailbreak
-payloads targeting **Gemini**, **GPT**, **Claude**, **Meta AI Studio**, and **HackerOne Hai**.
 
 ### 4. Sync results to data sinks
 ```bash
