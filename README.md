@@ -1,10 +1,13 @@
 # 🤖 AI Chatbot Security Tester — Ultimate Edition
 
-Test the security of **Google Gemini**, **Meta AI**, **ChatGPT**, **Claude**, and **HackerOne Hai** with:
+Test the security of **Google Gemini**, **Meta AI**, **ChatGPT**, **Claude**, and **HackerOne Hai**.
+
+## ✨ Features
 - 🛡️ OWASP **LLM Top 10** test coverage
-- 🧠 ML/AI risk scoring (hallucination / DLP / severity)
-- 📊 React dashboard (`npm run dev`)
-- ☁️ BigQuery + Notion sync
+- 🧠 Hallucination and data‑leak detection with risk scoring
+- 🧪 Gerake-based fuzzing
+- 📊 React dashboard (`dashboards/`)
+- ☁️ BigQuery + Notion export
 - 🔁 GitHub Actions CI/CD
 
 ## 🧱 Architecture
@@ -19,35 +22,67 @@ Reports + Sync
 ▼                     ▼
 BigQuery              Notion
 
-## 🧱 Architecture Diagram
+### Architecture Diagram
 
 ![Architecture](ai_chatbot_security_architecture.png)
 
-## ⚙️ Setup (Quick)
+## 🛠️ Local Setup
+
+### Backend
 ```bash
-# Backend
-python3 -m venv venv && source venv/bin/activate
+python3 -m venv venv
+source venv/bin/activate
 pip install -r scripts/requirements.txt
+```
 
-# Frontend
-cd dashboards && npm install && npm run dev
-Create .env (root):
-GOOGLE_APPLICATION_CREDENTIALS=/abs/path/to/key.json
-NOTION_TOKEN=secret_xxx
-NOTION_DATABASE_ID=xxxxxxxxxxxxxxxxxxxxxxxx
-SLACK_WEBHOOK_URL=...
-🧪 Run
-# 1) 1000+ prompt batch
-python scripts/batch_runner.py --provider gemini --out reports/results.csv
+### Frontend (Dashboard)
+```bash
+cd dashboards
+npm install
+npm run dev
+```
 
-# 2) OWASP LLM Top 10
+### Environment Variables (`.env` in repo root)
+```bash
+GOOGLE_APPLICATION_CREDENTIALS=/absolute/path/to/key.json
+NOTION_TOKEN=your_secret_notion_token
+NOTION_DATABASE_ID=your_notion_database_id
+SLACK_WEBHOOK_URL=https://hooks.slack.com/services/...
+```
+
+## 🚀 Usage
+
+### 1. Run a batch of prompts
+```bash
+python scripts/batch_runner.py --provider gpt --out reports/results.csv --count 5
+```
+
+### 2. OWASP LLM Top 10 tests
+```bash
 python scripts/run_owasp_tests.py --out reports/owasp_results.csv
+```
 
-# 3) Push to data sinks
+### 3. Gerake fuzz testing
+```bash
+python scripts/run_gerake_tests.py --provider claude --testcases examples/gerake_suite.yaml
+```
+
+### 4. Sync results to data sinks
+```bash
 python scripts/sync_to_bigquery.py reports/results.csv
 python scripts/sync_to_notion.py reports/results.csv
-☁️ Cloud
-Vercel: dashboards is Vite app (autodetected)
-Cloud Run (UI): cloud/cloud_run_ui_deploy.sh
-Notes
-Respect provider terms. For authorized, responsible testing only.
+```
+
+### 5. Trigger Slack alert (optional)
+```bash
+python scripts/notify_slack.py --file reports/results.csv
+```
+
+## ☁️ Cloud & CI/CD
+- GitHub Actions run tests on push
+- `dashboards/` can be deployed to Vercel
+- `cloud/cloud_run_ui_deploy.sh` deploys dashboard to Cloud Run
+
+## 📎 Notes
+- Ensure API keys and provider tokens are valid
+- Only test providers with explicit permission for responsible AI research
