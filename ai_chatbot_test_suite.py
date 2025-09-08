@@ -1036,6 +1036,27 @@ class AITestSuiteRunner:
         
         self.results = {}
     
+    def run_advanced_security_tests(self, target_model: str = "test-model", 
+                                  api_config: Dict[str, Any] = None,
+                                  verbose: bool = True) -> Dict[str, Any]:
+        """Run advanced security evaluation tests"""
+        try:
+            from security_evaluation_framework import SecurityTestSuiteRunner
+            
+            if api_config is None:
+                api_config = {"api_key": "test-key", "endpoint": "test-endpoint"}
+            
+            security_runner = SecurityTestSuiteRunner()
+            return security_runner.run_all_security_tests(
+                target_model=target_model,
+                api_config=api_config,
+                verbose=verbose
+            )
+        except ImportError:
+            if verbose:
+                print("⚠️  Advanced security framework not available")
+            return {"error": "Security framework not available"}
+    
     def run_all_tests(self, verbose: bool = True) -> Dict:
         """Run all test suites"""
         overall_results = {

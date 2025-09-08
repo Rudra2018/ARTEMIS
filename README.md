@@ -5,12 +5,12 @@ A comprehensive, professional-grade testing framework for LLM AI chatbots, ML mo
 ![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)
 ![License](https://img.shields.io/badge/License-Educational-green.svg)
 ![Framework](https://img.shields.io/badge/Framework-Flask-red.svg)
-![Tests](https://img.shields.io/badge/Tests-200+-brightgreen.svg)
+![Tests](https://img.shields.io/badge/Tests-320+-brightgreen.svg)
 
 ## 🌟 Features
 
 ### 🎯 **Comprehensive Testing**
-- **200+ Test Cases** across all major AI platforms
+- **320+ Test Cases** across all major AI platforms
 - **Multi-Provider Support**: OpenAI, Claude, Google AI Studio, Meta AI, Hugging Face, Cohere
 - **Security Validation**: Prompt injection, jailbreak resistance, content safety
 - **Performance Benchmarking**: Response times, throughput, scalability
@@ -122,13 +122,34 @@ ai-chatbot-testing-suite/
 - ✅ **Hugging Face**: Text generation, classification, Q&A
 - ✅ **Cross-platform**: Response consistency, capability comparison
 
-### **Security & Safety Tests** (`SecuritySafetyTests`)
-- 🛡️ Prompt injection resistance
-- 🛡️ Jailbreak attempt detection
-- 🛡️ Data privacy protection
-- 🛡️ Adversarial input handling
-- 🛡️ Content filtering validation
-- 🛡️ Information leakage prevention
+### **Advanced Security & Safety Tests** (`SecurityEvaluationFramework`)
+
+#### **Research-Based Security Frameworks**
+- 🛡️ **SEI & OpenAI Evaluation**: Realistic task-based security testing methodology
+- 🛡️ **WDTA Security Method**: L1-L4 attack categorization framework
+- 🛡️ **CyberSecEval 2**: Comprehensive cybersecurity knowledge assessment  
+- 🛡️ **Purple Llama CyberSecEval**: Secure coding and vulnerability detection tests
+- 🛡️ **Garak-inspired Scanner**: LLM vulnerability probing system
+- 🛡️ **OWASP LLM Top 10**: Industry-standard LLM security risk testing
+- 🛡️ **Automated Penetration Testing**: Systematic security vulnerability assessment
+
+#### **Security Test Coverage (120+ Tests)**
+- **L1-L4 Attack Categories**: From basic prompt injection to sophisticated attacks
+- **Prompt Injection Detection**: Multi-layer instruction manipulation resistance
+- **Jailbreak Resistance**: Advanced bypass attempt detection and prevention
+- **Adversarial Input Handling**: Encoding attacks, glitch tokens, continuation probes
+- **Code Security Analysis**: Vulnerability detection in generated code
+- **Social Engineering Resistance**: Human manipulation attempt detection
+- **Information Disclosure Prevention**: System prompt extraction, sensitive data protection
+- **Authentication & Session Security**: Access control and session management testing
+- **Input Validation Testing**: Data sanitization and validation verification
+
+#### **Security Metrics & Reporting**
+- **Overall Security Score**: Comprehensive 0-100 security rating
+- **Framework-Specific Scores**: Detailed scoring per security methodology
+- **Vulnerability Detection**: Automated security issue identification
+- **Risk Assessment**: Categorized severity levels (LOW/MEDIUM/HIGH/CRITICAL)
+- **Mitigation Recommendations**: Actionable security improvement advice
 
 ### **Performance Tests** (`PerformanceScalabilityTests`)
 - ⚡ Response time benchmarks

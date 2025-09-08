@@ -25,6 +25,12 @@ from config import ConfigManager, AIProvider, setup_environment
 from ai_chatbot_test_suite import AITestSuiteRunner
 from api_integration_tests import APIIntegrationTestRunner
 from run_tests import generate_reports
+try:
+    from security_evaluation_framework import SecurityTestSuiteRunner
+    SECURITY_FRAMEWORK_AVAILABLE = True
+except ImportError:
+    SECURITY_FRAMEWORK_AVAILABLE = False
+    SecurityTestSuiteRunner = None
 
 # Flask app setup
 app = Flask(__name__)
@@ -106,15 +112,29 @@ class TestExecutor:
                 if self.cancelled:
                     return
             
-            self._update_progress(50, "Running API integration tests...")
-            
             if suite_type in ['all', 'api']:
+                self._update_progress(40, "Running API integration tests...")
                 api_runner = APIIntegrationTestRunner()
                 api_results = api_runner.run_all_tests(verbose=False)
                 self.results['api'] = api_results
                 
                 if self.cancelled:
                     return
+            
+            if suite_type in ['all', 'security'] and SECURITY_FRAMEWORK_AVAILABLE:
+                self._update_progress(60, "Running advanced security tests...")
+                security_runner = SecurityTestSuiteRunner()
+                security_results = security_runner.run_all_security_tests(
+                    target_model="test-model",
+                    verbose=False
+                )
+                self.results['security'] = security_results
+                
+                if self.cancelled:
+                    return
+            elif suite_type in ['all', 'security'] and not SECURITY_FRAMEWORK_AVAILABLE:
+                self._update_progress(60, "Advanced security framework not available...")
+                self.results['security'] = {"error": "Security framework not available"}
             
             # Combine results
             self._update_progress(80, "Generating reports...")
