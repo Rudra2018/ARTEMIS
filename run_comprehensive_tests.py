@@ -21,24 +21,28 @@ try:
     from security_evaluation_framework import SecurityTestSuiteRunner
     from llm_security_research_framework import LLMSecurityResearchTestRunner  
     from comprehensive_security_test_suite import ComprehensiveSecurityTestRunner
+    from adaptive_learning_engine import AdaptiveLearningEngine, TestResult
     
     FRAMEWORKS_AVAILABLE = {
         'core_security': True,
         'research_security': True, 
-        'comprehensive_security': True
+        'comprehensive_security': True,
+        'adaptive_learning': True
     }
 except ImportError as e:
     print(f"Warning: Some frameworks not available - {e}")
     FRAMEWORKS_AVAILABLE = {
         'core_security': False,
         'research_security': False,
-        'comprehensive_security': False
+        'comprehensive_security': False,
+        'adaptive_learning': False
     }
 
 def run_all_security_tests(model_name: str = "comprehensive-test-model",
                           output_file: str = None,
                           suites: list = None,
-                          verbose: bool = True) -> dict:
+                          verbose: bool = True,
+                          enable_learning: bool = True) -> dict:
     """Run all available security test frameworks"""
     
     api_config = {"api_key": "test-key", "endpoint": "test-endpoint"}
@@ -146,6 +150,55 @@ def run_all_security_tests(model_name: str = "comprehensive-test-model",
     
     total_duration = time.time() - start_time
     
+    # 4. Adaptive Learning Integration (if enabled)
+    learning_summary = {}
+    if enable_learning and FRAMEWORKS_AVAILABLE['adaptive_learning']:
+        if verbose:
+            print("\n🧠 Running Adaptive Learning Engine...")
+        
+        try:
+            learning_engine = AdaptiveLearningEngine(f"learning_{model_name.replace('-', '_')}.db")
+            
+            # Convert results to TestResult format for learning
+            test_results_for_learning = []
+            
+            # Process results from all frameworks for learning
+            for framework_name, framework_results in all_results.items():
+                if 'detailed_results' in framework_results:
+                    for result in framework_results['detailed_results']:
+                        test_result = TestResult(
+                            test_id=result.get('test_id', f"{framework_name}_{len(test_results_for_learning)}"),
+                            test_name=result.get('test_name', result.get('test_type', 'Unknown Test')),
+                            category=result.get('category', framework_name),
+                            attack_vector=result.get('attack_vector', result.get('attack_type', 'unknown')),
+                            payload=result.get('payload', result.get('test_case', '')),
+                            response=result.get('response', result.get('model_response', '')),
+                            vulnerability_detected=result.get('vulnerability_detected', result.get('failed', False)),
+                            attack_successful=result.get('attack_successful', result.get('passed', False)),
+                            confidence_score=result.get('confidence_score', result.get('score', 0.0) / 100.0),
+                            execution_time=result.get('execution_time', result.get('duration', 0.0)),
+                            model_name=model_name,
+                            timestamp=datetime.now()
+                        )
+                        test_results_for_learning.append(test_result)
+            
+            # Run adaptive learning
+            if test_results_for_learning:
+                learning_summary = learning_engine.learn_from_results(test_results_for_learning)
+                
+                if verbose:
+                    print(f"   ✅ Learning Engine: Processed {learning_summary['processed_results']} results")
+                    print(f"   🧠 New Patterns: {learning_summary['new_patterns_discovered']}")
+                    print(f"   💡 Insights: {learning_summary['insights_generated']}")
+                    print(f"   🧪 Generated Tests: {learning_summary['tests_generated']}")
+            else:
+                if verbose:
+                    print("   ⚠️  No suitable test results found for learning")
+                    
+        except Exception as e:
+            if verbose:
+                print(f"   ❌ Adaptive Learning failed: {str(e)}")
+    
     # Generate final summary
     final_report = {
         "ultimate_security_evaluation": {
@@ -158,7 +211,8 @@ def run_all_security_tests(model_name: str = "comprehensive-test-model",
             "overall_success_rate": ((total_tests - total_vulnerabilities) / total_tests * 100) if total_tests > 0 else 0,
             "framework_availability": FRAMEWORKS_AVAILABLE
         },
-        "framework_results": all_results
+        "framework_results": all_results,
+        "adaptive_learning": learning_summary if learning_summary else {"enabled": False}
     }
     
     if verbose:
@@ -249,6 +303,12 @@ Examples:
         help='List available test suites and exit'
     )
     
+    parser.add_argument(
+        '--no-learning',
+        action='store_true',
+        help='Disable adaptive learning engine'
+    )
+    
     args = parser.parse_args()
     
     # List available suites if requested
@@ -295,7 +355,8 @@ Examples:
             model_name=args.model,
             output_file=args.output,
             suites=suites_to_run,
-            verbose=not args.quiet
+            verbose=not args.quiet,
+            enable_learning=not args.no_learning
         )
         
         if not args.quiet:
