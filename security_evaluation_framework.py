@@ -1641,7 +1641,8 @@ class SecurityTestSuiteRunner:
     
     def run_all_security_tests(self, target_model: str = "test-model", 
                              api_config: Dict[str, Any] = None,
-                             verbose: bool = True) -> Dict[str, Any]:
+                             verbose: bool = True,
+                             include_research_tests: bool = True) -> Dict[str, Any]:
         """Run all security tests and return comprehensive results"""
         
         if api_config is None:
@@ -1654,6 +1655,27 @@ class SecurityTestSuiteRunner:
         
         # Run evaluation
         report = evaluator.run_comprehensive_evaluation()
+        
+        # Run additional research-based tests if requested
+        research_results = {}
+        if include_research_tests:
+            try:
+                from llm_security_research_framework import LLMSecurityResearchTestRunner
+                research_runner = LLMSecurityResearchTestRunner()
+                research_results = research_runner.run_research_security_tests(
+                    target_model=target_model,
+                    api_config=api_config,
+                    verbose=False  # Avoid duplicate verbose output
+                )
+                
+                if verbose:
+                    print(f"\n🔬 Research-based tests completed: {research_results['research_security_evaluation']['total_tests']} additional tests")
+                    print(f"   Research vulnerabilities found: {research_results['research_security_evaluation']['vulnerabilities_found']}")
+                    print(f"   Research attack success rate: {research_results['research_security_evaluation']['attack_success_rate']:.1f}%")
+                
+            except ImportError:
+                if verbose:
+                    print("📚 Research framework not available - running core security tests only")
         
         # Convert to dict format for compatibility
         results = {
@@ -1683,6 +1705,15 @@ class SecurityTestSuiteRunner:
                 for result in report.detailed_results
             ]
         }
+        
+        # Add research results if available
+        if research_results:
+            results["research_security_evaluation"] = research_results["research_security_evaluation"]
+            results["research_detailed_results"] = research_results["detailed_results"]
+            
+            # Update total counts
+            results["security_evaluation"]["total_tests"] += research_results["research_security_evaluation"]["total_tests"]
+            results["security_evaluation"]["vulnerabilities_detected"] += research_results["research_security_evaluation"]["vulnerabilities_found"]
         
         if verbose:
             print("\n" + "="*80)

@@ -5,12 +5,12 @@ A comprehensive, professional-grade testing framework for LLM AI chatbots, ML mo
 ![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)
 ![License](https://img.shields.io/badge/License-Educational-green.svg)
 ![Framework](https://img.shields.io/badge/Framework-Flask-red.svg)
-![Tests](https://img.shields.io/badge/Tests-320+-brightgreen.svg)
+![Tests](https://img.shields.io/badge/Tests-420+-brightgreen.svg)
 
 ## 🌟 Features
 
 ### 🎯 **Comprehensive Testing**
-- **320+ Test Cases** across all major AI platforms
+- **420+ Test Cases** across all major AI platforms and security frameworks
 - **Multi-Provider Support**: OpenAI, Claude, Google AI Studio, Meta AI, Hugging Face, Cohere
 - **Security Validation**: Prompt injection, jailbreak resistance, content safety
 - **Performance Benchmarking**: Response times, throughput, scalability
@@ -74,6 +74,8 @@ ai-chatbot-testing-suite/
 ├── 🧪 Core Testing Framework
 │   ├── ai_chatbot_test_suite.py   # Main test suites (200+ tests)
 │   ├── api_integration_tests.py   # API integration tests
+│   ├── security_evaluation_framework.py  # Advanced security testing (120+ tests)
+│   ├── llm_security_research_framework.py # Research-based security tests (100+ tests)
 │   ├── config.py                  # Configuration management
 │   └── run_tests.py               # Command-line test runner
 ├── 🎨 Frontend Assets
@@ -150,6 +152,26 @@ ai-chatbot-testing-suite/
 - **Vulnerability Detection**: Automated security issue identification
 - **Risk Assessment**: Categorized severity levels (LOW/MEDIUM/HIGH/CRITICAL)
 - **Mitigation Recommendations**: Actionable security improvement advice
+
+#### **🔬 Research-Based Security Testing** (`LLMSecurityResearchFramework`)
+*Based on "LLM Security: Vulnerabilities, Attacks, Defenses, and Countermeasures" by Aguilera-Martínez & Berzal (arXiv, March 2024)*
+
+**Advanced Vulnerability Testing (100+ Additional Tests)**
+- **Prompt Injection Vulnerabilities**: Direct/indirect injection, context manipulation, multi-turn attacks, template injection
+- **Data Poisoning Detection**: Training data poisoning simulation, backdoor trigger detection, bias injection attempts
+- **Model Extraction Attacks**: Parameter probing, weight extraction, architecture information disclosure
+- **Privacy Leakage Testing**: Personal information extraction, PII reconstruction, conversation leakage
+- **Membership Inference Attacks**: Training data membership detection, statistical inference testing
+- **Property Inference Attacks**: Training data composition analysis, model capability extraction
+- **Bias Amplification Analysis**: Gender, racial, socioeconomic, and age bias detection
+- **Responsible AI Practices**: Transparency, accountability, fairness, and explainability evaluation
+
+**Research-Based Security Metrics**
+- **Attack Success Rate**: Percentage of successful security attacks
+- **Defense Effectiveness**: 0-100 rating of defensive capabilities  
+- **Responsible Practices Score**: Ethical AI implementation assessment
+- **Vulnerability Breakdown**: Classification by research-defined categories
+- **Attack Vector Analysis**: Success rates by attack methodology
 
 ### **Performance Tests** (`PerformanceScalabilityTests`)
 - ⚡ Response time benchmarks
@@ -418,6 +440,28 @@ jobs:
           path: test_results/*.xml
           reporter: java-junit
 ```
+
+## 📚 Research References
+
+This testing suite incorporates cutting-edge security research and methodologies:
+
+### **Core Security Frameworks**
+- **SEI & OpenAI (2024)**: "Realistic task-based LLM security evaluation"
+- **WDTA Security Method**: L1-L4 attack categorization framework
+- **CyberSecEval 2**: Meta's cybersecurity evaluation benchmark
+- **Purple Llama**: Meta's responsible AI safety toolkit
+- **Garak**: LLM vulnerability scanner methodology
+- **OWASP LLM Top 10**: Industry-standard LLM security risks
+
+### **Research-Based Testing**
+- **Aguilera-Martínez, F. & Berzal, F. (2024)**: *"LLM Security: Vulnerabilities, Attacks, Defenses, and Countermeasures"*, arXiv preprint
+- **Comprehensive vulnerability taxonomy** covering prompt injection, data poisoning, privacy leakage
+- **Advanced attack methodologies** including membership inference and model extraction
+- **Responsible AI practices** evaluation framework
+- **Defense effectiveness** assessment methodology
+
+### **Academic Contributions**
+The testing suite serves as a practical implementation of academic security research, bridging the gap between theoretical security analysis and real-world LLM evaluation. Test results can support security research and responsible AI development.
 
 ## 📋 Requirements
 
