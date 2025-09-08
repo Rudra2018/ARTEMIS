@@ -1,0 +1,792 @@
+{% extends "base.html" %}
+
+{% block title %}Documentation - AI Testing Suite{% endblock %}
+
+{% block content %}
+<div class="row animate-in">
+    <div class="col-12 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="mb-0">
+                    <i class="fas fa-book me-2"></i>
+                    Documentation
+                </h2>
+                <p class="mb-0 mt-2 text-muted">
+                    Comprehensive guide to using the AI Chatbot Testing Suite
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row animate-in">
+    <!-- Sidebar Navigation -->
+    <div class="col-md-3">
+        <div class="card sticky-top" style="top: 20px;">
+            <div class="card-header">
+                <h6 class="mb-0">Table of Contents</h6>
+            </div>
+            <div class="card-body p-0">
+                <nav class="nav nav-pills flex-column">
+                    <a class="nav-link" href="#overview">Overview</a>
+                    <a class="nav-link" href="#getting-started">Getting Started</a>
+                    <a class="nav-link" href="#configuration">Configuration</a>
+                    <a class="nav-link" href="#test-suites">Test Suites</a>
+                    <a class="nav-link" href="#providers">AI Providers</a>
+                    <a class="nav-link" href="#running-tests">Running Tests</a>
+                    <a class="nav-link" href="#results">Understanding Results</a>
+                    <a class="nav-link" href="#api-reference">API Reference</a>
+                    <a class="nav-link" href="#troubleshooting">Troubleshooting</a>
+                    <a class="nav-link" href="#examples">Examples</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="col-md-9">
+        <div class="card">
+            <div class="card-body">
+                <!-- Overview -->
+                <section id="overview" class="mb-5">
+                    <h3>
+                        <i class="fas fa-eye me-2 text-primary"></i>
+                        Overview
+                    </h3>
+                    <p class="lead">
+                        The AI Chatbot Testing Suite is a comprehensive platform for testing LLM AI chatbots, 
+                        ML models, and AI platform integrations.
+                    </p>
+                    
+                    <h5>Key Features</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success me-2"></i> Multi-platform API testing</li>
+                                <li><i class="fas fa-check text-success me-2"></i> Security & safety validation</li>
+                                <li><i class="fas fa-check text-success me-2"></i> Performance benchmarking</li>
+                                <li><i class="fas fa-check text-success me-2"></i> Real-time test execution</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success me-2"></i> Comprehensive reporting</li>
+                                <li><i class="fas fa-check text-success me-2"></i> Mock and live testing modes</li>
+                                <li><i class="fas fa-check text-success me-2"></i> Edge case handling</li>
+                                <li><i class="fas fa-check text-success me-2"></i> Visual analytics dashboard</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h5>Supported AI Providers</h5>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <div class="d-flex align-items-center">
+                                <i class="fab fa-openai fa-2x text-primary me-3"></i>
+                                <div>
+                                    <strong>OpenAI</strong>
+                                    <br><small class="text-muted">GPT-3.5, GPT-4, DALL-E</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-robot fa-2x text-info me-3"></i>
+                                <div>
+                                    <strong>Claude</strong>
+                                    <br><small class="text-muted">Claude 3 variants</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="d-flex align-items-center">
+                                <i class="fab fa-google fa-2x text-warning me-3"></i>
+                                <div>
+                                    <strong>Google AI Studio</strong>
+                                    <br><small class="text-muted">Gemini Pro, Vision</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Getting Started -->
+                <section id="getting-started" class="mb-5">
+                    <h3>
+                        <i class="fas fa-rocket me-2 text-success"></i>
+                        Getting Started
+                    </h3>
+                    
+                    <h5>Prerequisites</h5>
+                    <ul>
+                        <li>Python 3.8 or higher</li>
+                        <li>Modern web browser (Chrome, Firefox, Safari, Edge)</li>
+                        <li>API keys for the providers you want to test (optional for mock testing)</li>
+                    </ul>
+
+                    <h5>Quick Start</h5>
+                    <div class="alert alert-info">
+                        <h6><i class="fas fa-info-circle me-2"></i>Installation Steps</h6>
+                        <ol class="mb-0">
+                            <li>Install dependencies: <code>pip install -r requirements.txt</code></li>
+                            <li>Start the web interface: <code>python web_app.py</code></li>
+                            <li>Open your browser to <code>http://localhost:5000</code></li>
+                            <li>Configure your API keys (optional for mock testing)</li>
+                            <li>Run your first test!</li>
+                        </ol>
+                    </div>
+
+                    <h5>First Test Run</h5>
+                    <p>
+                        For your first test, we recommend using <strong>Mock Mode</strong> to familiarize 
+                        yourself with the interface without consuming API credits.
+                    </p>
+                    
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <h6>Quick Test Steps:</h6>
+                            <ol class="mb-0">
+                                <li>Go to the <strong>Run Tests</strong> page</li>
+                                <li>Select <strong>Core LLM Tests</strong></li>
+                                <li>Choose <strong>Mock Mode</strong></li>
+                                <li>Click <strong>Run Tests</strong></li>
+                                <li>Monitor real-time progress</li>
+                                <li>View detailed results</li>
+                            </ol>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Configuration -->
+                <section id="configuration" class="mb-5">
+                    <h3>
+                        <i class="fas fa-cog me-2 text-warning"></i>
+                        Configuration
+                    </h3>
+                    
+                    <h5>API Key Setup</h5>
+                    <p>
+                        Configure API keys through the <strong>Configuration</strong> page or 
+                        environment variables:
+                    </p>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Provider</th>
+                                    <th>Environment Variable</th>
+                                    <th>Example</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>OpenAI</td>
+                                    <td><code>OPENAI_API_KEY</code></td>
+                                    <td><code>sk-proj-...</code></td>
+                                </tr>
+                                <tr>
+                                    <td>Claude</td>
+                                    <td><code>CLAUDE_API_KEY</code></td>
+                                    <td><code>sk-ant-...</code></td>
+                                </tr>
+                                <tr>
+                                    <td>Google AI Studio</td>
+                                    <td><code>GOOGLE_AI_STUDIO_API_KEY</code></td>
+                                    <td><code>AIza...</code></td>
+                                </tr>
+                                <tr>
+                                    <td>Hugging Face</td>
+                                    <td><code>HUGGINGFACE_API_KEY</code></td>
+                                    <td><code>hf_...</code></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h5>Test Configuration</h5>
+                    <p>Customize test execution parameters:</p>
+                    <ul>
+                        <li><strong>Timeout:</strong> Maximum time per test suite (default: 300s)</li>
+                        <li><strong>Max Retries:</strong> Number of retry attempts for failed requests (default: 3)</li>
+                        <li><strong>Rate Limits:</strong> Configure per-provider rate limiting</li>
+                        <li><strong>Mock Mode:</strong> Enable/disable mock responses for testing</li>
+                    </ul>
+                </section>
+
+                <!-- Test Suites -->
+                <section id="test-suites" class="mb-5">
+                    <h3>
+                        <i class="fas fa-vial me-2 text-info"></i>
+                        Test Suites
+                    </h3>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="card border-primary">
+                                <div class="card-header bg-primary text-white">
+                                    <h6 class="mb-0">
+                                        <i class="fas fa-brain me-2"></i>
+                                        Core LLM Tests
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-unstyled mb-0">
+                                        <li>• Basic conversation functionality</li>
+                                        <li>• Context maintenance</li>
+                                        <li>• Multilingual support</li>
+                                        <li>• Instruction following</li>
+                                        <li>• Knowledge cutoff handling</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <div class="card border-success">
+                                <div class="card-header bg-success text-white">
+                                    <h6 class="mb-0">
+                                        <i class="fas fa-cloud me-2"></i>
+                                        API Integration Tests
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-unstyled mb-0">
+                                        <li>• Provider connectivity</li>
+                                        <li>• Authentication validation</li>
+                                        <li>• Rate limit compliance</li>
+                                        <li>• Response format validation</li>
+                                        <li>• Error handling</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <div class="card border-warning">
+                                <div class="card-header bg-warning text-white">
+                                    <h6 class="mb-0">
+                                        <i class="fas fa-shield-alt me-2"></i>
+                                        Security Tests
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-unstyled mb-0">
+                                        <li>• Prompt injection resistance</li>
+                                        <li>• Jailbreak detection</li>
+                                        <li>• Data privacy protection</li>
+                                        <li>• Content filtering</li>
+                                        <li>• Information leakage prevention</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <div class="card border-danger">
+                                <div class="card-header bg-danger text-white">
+                                    <h6 class="mb-0">
+                                        <i class="fas fa-tachometer-alt me-2"></i>
+                                        Performance Tests
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-unstyled mb-0">
+                                        <li>• Response time benchmarks</li>
+                                        <li>• Throughput testing</li>
+                                        <li>• Memory usage monitoring</li>
+                                        <li>• Concurrent request handling</li>
+                                        <li>• Scalability validation</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- AI Providers -->
+                <section id="providers" class="mb-5">
+                    <h3>
+                        <i class="fas fa-plug me-2 text-secondary"></i>
+                        AI Providers
+                    </h3>
+                    
+                    <div class="alert alert-info">
+                        <h6><i class="fas fa-info-circle me-2"></i>Provider Status</h6>
+                        <p class="mb-0">
+                            Check the <strong>Configuration</strong> page to see which providers are 
+                            configured and their current status.
+                        </p>
+                    </div>
+
+                    <h5>Provider-Specific Features</h5>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Provider</th>
+                                    <th>Models</th>
+                                    <th>Special Features</th>
+                                    <th>Rate Limit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>OpenAI</strong></td>
+                                    <td>GPT-3.5 Turbo, GPT-4, DALL-E</td>
+                                    <td>Image generation, Fine-tuning</td>
+                                    <td>3,500 RPM</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Claude</strong></td>
+                                    <td>Claude 3 Haiku, Sonnet, Opus</td>
+                                    <td>Long context, Vision</td>
+                                    <td>100 RPM</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Google AI Studio</strong></td>
+                                    <td>Gemini Pro, Gemini Pro Vision</td>
+                                    <td>Multimodal, Safety settings</td>
+                                    <td>60 RPM</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Hugging Face</strong></td>
+                                    <td>Various open-source models</td>
+                                    <td>Model variety, Free tier</td>
+                                    <td>1,000 RPM</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Running Tests -->
+                <section id="running-tests" class="mb-5">
+                    <h3>
+                        <i class="fas fa-play me-2 text-success"></i>
+                        Running Tests
+                    </h3>
+                    
+                    <h5>Test Execution Modes</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card border-success">
+                                <div class="card-header">
+                                    <h6 class="mb-0 text-success">
+                                        <i class="fas fa-flask me-2"></i>Mock Mode
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    <p><strong>Recommended for:</strong></p>
+                                    <ul class="small">
+                                        <li>Development and debugging</li>
+                                        <li>CI/CD pipelines</li>
+                                        <li>Learning the interface</li>
+                                        <li>Testing without API costs</li>
+                                    </ul>
+                                    <p class="small text-muted mb-0">
+                                        Uses predefined responses to simulate API behavior
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card border-primary">
+                                <div class="card-header">
+                                    <h6 class="mb-0 text-primary">
+                                        <i class="fas fa-globe me-2"></i>Live Mode
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    <p><strong>Recommended for:</strong></p>
+                                    <ul class="small">
+                                        <li>Production validation</li>
+                                        <li>Real API testing</li>
+                                        <li>Performance benchmarking</li>
+                                        <li>Integration verification</li>
+                                    </ul>
+                                    <p class="small text-muted mb-0">
+                                        Requires API keys and may incur costs
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h5>Real-time Monitoring</h5>
+                    <p>
+                        During test execution, you can monitor progress in real-time with:
+                    </p>
+                    <ul>
+                        <li><strong>Progress bar:</strong> Visual progress indicator</li>
+                        <li><strong>Live log:</strong> Real-time test execution messages</li>
+                        <li><strong>Status updates:</strong> Current test phase and status</li>
+                        <li><strong>Cancellation:</strong> Stop tests at any time</li>
+                    </ul>
+                </section>
+
+                <!-- Understanding Results -->
+                <section id="results" class="mb-5">
+                    <h3>
+                        <i class="fas fa-chart-bar me-2 text-info"></i>
+                        Understanding Results
+                    </h3>
+                    
+                    <h5>Result Metrics</h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Metric</th>
+                                    <th>Description</th>
+                                    <th>Good Range</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Success Rate</strong></td>
+                                    <td>Percentage of tests that passed</td>
+                                    <td>80%+</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Response Time</strong></td>
+                                    <td>Average time per API request</td>
+                                    <td>&lt; 3 seconds</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Throughput</strong></td>
+                                    <td>Requests handled per minute</td>
+                                    <td>Provider dependent</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Error Rate</strong></td>
+                                    <td>Percentage of requests with errors</td>
+                                    <td>&lt; 5%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h5>Status Indicators</h5>
+                    <div class="row">
+                        <div class="col-md-3 mb-2">
+                            <span class="badge status-badge status-completed">Completed</span>
+                            <small class="d-block text-muted">Test finished successfully</small>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <span class="badge status-badge status-failed">Failed</span>
+                            <small class="d-block text-muted">Test encountered errors</small>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <span class="badge status-badge status-cancelled">Cancelled</span>
+                            <small class="d-block text-muted">Test was stopped manually</small>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <span class="badge status-badge status-running">Running</span>
+                            <small class="d-block text-muted">Test is in progress</small>
+                        </div>
+                    </div>
+
+                    <h5>Export Formats</h5>
+                    <ul>
+                        <li><strong>JSON:</strong> Raw data for programmatic analysis</li>
+                        <li><strong>HTML:</strong> Formatted report for sharing</li>
+                        <li><strong>JUnit XML:</strong> CI/CD integration format</li>
+                    </ul>
+                </section>
+
+                <!-- API Reference -->
+                <section id="api-reference" class="mb-5">
+                    <h3>
+                        <i class="fas fa-code me-2 text-primary"></i>
+                        API Reference
+                    </h3>
+                    
+                    <h5>REST Endpoints</h5>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Method</th>
+                                    <th>Endpoint</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="badge bg-success">POST</span></td>
+                                    <td><code>/api/test/start</code></td>
+                                    <td>Start a new test execution</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge bg-info">GET</span></td>
+                                    <td><code>/api/test/status/{id}</code></td>
+                                    <td>Get test execution status</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge bg-warning">POST</span></td>
+                                    <td><code>/api/test/cancel/{id}</code></td>
+                                    <td>Cancel running test</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge bg-info">GET</span></td>
+                                    <td><code>/api/test/results/{id}</code></td>
+                                    <td>Get test results</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge bg-info">GET</span></td>
+                                    <td><code>/api/providers</code></td>
+                                    <td>Get configured providers</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge bg-success">POST</span></td>
+                                    <td><code>/api/config/save</code></td>
+                                    <td>Save configuration</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h5>WebSocket Events</h5>
+                    <p>Real-time updates via Socket.IO:</p>
+                    <ul>
+                        <li><code>test_progress_update</code> - Progress updates during execution</li>
+                        <li><code>test_completed</code> - Test completion notification</li>
+                        <li><code>test_failed</code> - Test failure notification</li>
+                    </ul>
+                </section>
+
+                <!-- Troubleshooting -->
+                <section id="troubleshooting" class="mb-5">
+                    <h3>
+                        <i class="fas fa-wrench me-2 text-warning"></i>
+                        Troubleshooting
+                    </h3>
+                    
+                    <h5>Common Issues</h5>
+                    
+                    <div class="accordion" id="troubleshootingAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading1">
+                                <button class="accordion-button collapsed" type="button" 
+                                        data-bs-toggle="collapse" data-bs-target="#collapse1">
+                                    API Connection Failures
+                                </button>
+                            </h2>
+                            <div id="collapse1" class="accordion-collapse collapse" 
+                                 data-bs-parent="#troubleshootingAccordion">
+                                <div class="accordion-body">
+                                    <strong>Symptoms:</strong> Tests fail with connection errors
+                                    <br><strong>Solutions:</strong>
+                                    <ul class="mt-2">
+                                        <li>Verify API keys are correct and active</li>
+                                        <li>Check network connectivity</li>
+                                        <li>Ensure rate limits aren't exceeded</li>
+                                        <li>Test connection in Configuration page</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading2">
+                                <button class="accordion-button collapsed" type="button" 
+                                        data-bs-toggle="collapse" data-bs-target="#collapse2">
+                                    Tests Stuck in Running State
+                                </button>
+                            </h2>
+                            <div id="collapse2" class="accordion-collapse collapse" 
+                                 data-bs-parent="#troubleshootingAccordion">
+                                <div class="accordion-body">
+                                    <strong>Symptoms:</strong> Tests show as running indefinitely
+                                    <br><strong>Solutions:</strong>
+                                    <ul class="mt-2">
+                                        <li>Check if timeout settings are too high</li>
+                                        <li>Cancel and restart the test</li>
+                                        <li>Review system logs for errors</li>
+                                        <li>Restart the application if needed</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading3">
+                                <button class="accordion-button collapsed" type="button" 
+                                        data-bs-toggle="collapse" data-bs-target="#collapse3">
+                                    Low Success Rates
+                                </button>
+                            </h2>
+                            <div id="collapse3" class="accordion-collapse collapse" 
+                                 data-bs-parent="#troubleshootingAccordion">
+                                <div class="accordion-body">
+                                    <strong>Symptoms:</strong> Many tests failing or producing errors
+                                    <br><strong>Solutions:</strong>
+                                    <ul class="mt-2">
+                                        <li>Review detailed error messages</li>
+                                        <li>Check API quota and limits</li>
+                                        <li>Verify model availability</li>
+                                        <li>Start with mock mode to isolate issues</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h5 class="mt-4">Getting Help</h5>
+                    <div class="alert alert-info">
+                        <h6><i class="fas fa-question-circle me-2"></i>Support Resources</h6>
+                        <ul class="mb-0">
+                            <li><strong>GitHub Issues:</strong> Report bugs and feature requests</li>
+                            <li><strong>Documentation:</strong> This comprehensive guide</li>
+                            <li><strong>Configuration Validation:</strong> Use the built-in validator</li>
+                            <li><strong>Mock Mode:</strong> Test functionality without API dependencies</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- Examples -->
+                <section id="examples" class="mb-5">
+                    <h3>
+                        <i class="fas fa-code-branch me-2 text-success"></i>
+                        Examples
+                    </h3>
+                    
+                    <h5>Example 1: Quick Security Audit</h5>
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <p><strong>Goal:</strong> Run a quick security assessment of your AI chatbot</p>
+                            <p><strong>Steps:</strong></p>
+                            <ol class="mb-0">
+                                <li>Go to Run Tests → Select "Security Tests"</li>
+                                <li>Choose Mock Mode for initial testing</li>
+                                <li>Run test and review security metrics</li>
+                                <li>Switch to Live Mode for real validation</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <h5>Example 2: API Performance Benchmark</h5>
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <p><strong>Goal:</strong> Compare performance across different AI providers</p>
+                            <p><strong>Steps:</strong></p>
+                            <ol class="mb-0">
+                                <li>Configure multiple providers in Configuration</li>
+                                <li>Run "Performance Tests" with all providers selected</li>
+                                <li>Compare response times and success rates</li>
+                                <li>Export results for further analysis</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <h5>Example 3: CI/CD Integration</h5>
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <p><strong>Goal:</strong> Integrate testing into your deployment pipeline</p>
+                            <p><strong>Command line usage:</strong></p>
+                            <pre class="bg-dark text-light p-3 rounded"><code>python run_tests.py --suite security --mock --report-format junit --output-dir ci_reports</code></pre>
+                            <p class="small text-muted mb-0">This generates JUnit XML reports suitable for CI/CD systems</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.nav-pills .nav-link {
+    color: #6c757d;
+    border-radius: 4px;
+    margin-bottom: 2px;
+}
+
+.nav-pills .nav-link:hover {
+    background-color: #e9ecef;
+}
+
+.nav-pills .nav-link.active {
+    background-color: #007bff;
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: #e7f1ff;
+    border-color: #b6d7ff;
+}
+
+.accordion-button:focus {
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+h3 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e9ecef;
+}
+
+h3:first-child {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+}
+
+section {
+    scroll-margin-top: 80px;
+}
+
+.card-header h6 {
+    font-weight: 600;
+}
+
+pre code {
+    font-size: 0.875rem;
+}
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('.nav-link[href^="#"]').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth' });
+                
+                // Update active nav link
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+            }
+        });
+    });
+
+    // Update active nav link on scroll
+    const observerOptions = {
+        rootMargin: '-80px 0px -50% 0px'
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            const id = entry.target.getAttribute('id');
+            const navLink = document.querySelector(`.nav-link[href="#${id}"]`);
+            
+            if (entry.isIntersecting) {
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                if (navLink) {
+                    navLink.classList.add('active');
+                }
+            }
+        });
+    }, observerOptions);
+
+    // Observe all sections
+    document.querySelectorAll('section[id]').forEach(section => {
+        observer.observe(section);
+    });
+});
+</script>
+{% endblock %}

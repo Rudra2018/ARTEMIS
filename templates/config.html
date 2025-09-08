@@ -1,0 +1,701 @@
+{% extends "base.html" %}
+
+{% block title %}Configuration - AI Testing Suite{% endblock %}
+
+{% block content %}
+<div class="row animate-in">
+    <div class="col-12 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    <i class="fas fa-cog me-2"></i>
+                    API Configuration Management
+                </h4>
+                <p class="mb-0 mt-2 text-muted">
+                    Configure API keys and settings for various AI providers to enable live testing.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Configuration Status -->
+<div class="row animate-in">
+    <div class="col-12 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Configuration Status
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 text-center">
+                        <h3 class="text-primary">{{ providers|length }}</h3>
+                        <p class="text-muted">Available Providers</p>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <h3 class="text-success">{{ providers|length }}</h3>
+                        <p class="text-muted">Configured Providers</p>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <h3 class="{% if validation.valid %}text-success{% else %}text-danger{% endif %}">
+                            {% if validation.valid %}✓{% else %}✗{% endif %}
+                        </h3>
+                        <p class="text-muted">Configuration Valid</p>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <button class="btn btn-outline-primary" onclick="validateConfiguration()">
+                            <i class="fas fa-check-circle me-2"></i>
+                            Validate Now
+                        </button>
+                    </div>
+                </div>
+                
+                {% if validation.errors %}
+                <div class="alert alert-danger mt-3">
+                    <h6><i class="fas fa-exclamation-triangle me-2"></i>Configuration Errors:</h6>
+                    <ul class="mb-0">
+                        {% for error in validation.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+                
+                {% if validation.warnings %}
+                <div class="alert alert-warning mt-3">
+                    <h6><i class="fas fa-exclamation-circle me-2"></i>Warnings:</h6>
+                    <ul class="mb-0">
+                        {% for warning in validation.warnings %}
+                        <li>{{ warning }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Provider Configuration -->
+<div class="row animate-in">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-plug me-2"></i>
+                    API Provider Settings
+                </h5>
+                <div>
+                    <button class="btn btn-outline-info me-2" onclick="loadConfigTemplate()">
+                        <i class="fas fa-download me-2"></i>
+                        Load Template
+                    </button>
+                    <button class="btn btn-success" onclick="saveConfiguration()">
+                        <i class="fas fa-save me-2"></i>
+                        Save Configuration
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <form id="configurationForm">
+                    <!-- Provider Configuration Tabs -->
+                    <ul class="nav nav-tabs" id="providerTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="openai-tab" data-bs-toggle="tab" 
+                                    data-bs-target="#openai-config" type="button" role="tab">
+                                <i class="fas fa-brain me-2"></i>
+                                OpenAI
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="claude-tab" data-bs-toggle="tab" 
+                                    data-bs-target="#claude-config" type="button" role="tab">
+                                <i class="fas fa-robot me-2"></i>
+                                Claude
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="google-tab" data-bs-toggle="tab" 
+                                    data-bs-target="#google-config" type="button" role="tab">
+                                <i class="fab fa-google me-2"></i>
+                                Google AI Studio
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="meta-tab" data-bs-toggle="tab" 
+                                    data-bs-target="#meta-config" type="button" role="tab">
+                                <i class="fab fa-meta me-2"></i>
+                                Meta AI
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="huggingface-tab" data-bs-toggle="tab" 
+                                    data-bs-target="#huggingface-config" type="button" role="tab">
+                                <i class="fas fa-face-smile me-2"></i>
+                                Hugging Face
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="cohere-tab" data-bs-toggle="tab" 
+                                    data-bs-target="#cohere-config" type="button" role="tab">
+                                <i class="fas fa-comments me-2"></i>
+                                Cohere
+                            </button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content mt-4" id="providerTabContent">
+                        <!-- OpenAI Configuration -->
+                        <div class="tab-pane fade show active" id="openai-config" role="tabpanel">
+                            <div class="provider-config-section">
+                                <h6>OpenAI Configuration</h6>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">API Key <span class="text-danger">*</span></label>
+                                            <div class="input-group">
+                                                <input type="password" class="form-control" name="openai_api_key" 
+                                                       placeholder="sk-..." data-provider="openai">
+                                                <button class="btn btn-outline-secondary" type="button" 
+                                                        onclick="togglePassword(this)">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </div>
+                                            <div class="form-text">Your OpenAI API key from platform.openai.com</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Organization ID (Optional)</label>
+                                            <input type="text" class="form-control" name="openai_org_id" 
+                                                   placeholder="org-..." data-provider="openai">
+                                            <div class="form-text">Optional organization identifier</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Default Model</label>
+                                            <select class="form-control" name="openai_model" data-provider="openai">
+                                                <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+                                                <option value="gpt-4">GPT-4</option>
+                                                <option value="gpt-4-turbo">GPT-4 Turbo</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Rate Limit (RPM)</label>
+                                            <input type="number" class="form-control" name="openai_rate_limit" 
+                                                   value="3500" data-provider="openai">
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-outline-primary" 
+                                        onclick="testConnection('openai')">
+                                    <i class="fas fa-plug me-2"></i>Test Connection
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Claude Configuration -->
+                        <div class="tab-pane fade" id="claude-config" role="tabpanel">
+                            <div class="provider-config-section">
+                                <h6>Claude Configuration</h6>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">API Key <span class="text-danger">*</span></label>
+                                            <div class="input-group">
+                                                <input type="password" class="form-control" name="claude_api_key" 
+                                                       placeholder="sk-ant-..." data-provider="claude">
+                                                <button class="btn btn-outline-secondary" type="button" 
+                                                        onclick="togglePassword(this)">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </div>
+                                            <div class="form-text">Your Anthropic API key</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Default Model</label>
+                                            <select class="form-control" name="claude_model" data-provider="claude">
+                                                <option value="claude-3-haiku-20240307">Claude 3 Haiku</option>
+                                                <option value="claude-3-sonnet-20240229">Claude 3 Sonnet</option>
+                                                <option value="claude-3-opus-20240229">Claude 3 Opus</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Rate Limit (RPM)</label>
+                                            <input type="number" class="form-control" name="claude_rate_limit" 
+                                                   value="100" data-provider="claude">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">API Version</label>
+                                            <input type="text" class="form-control" name="claude_api_version" 
+                                                   value="2023-06-01" data-provider="claude">
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-outline-primary" 
+                                        onclick="testConnection('claude')">
+                                    <i class="fas fa-plug me-2"></i>Test Connection
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Google AI Studio Configuration -->
+                        <div class="tab-pane fade" id="google-config" role="tabpanel">
+                            <div class="provider-config-section">
+                                <h6>Google AI Studio Configuration</h6>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">API Key <span class="text-danger">*</span></label>
+                                            <div class="input-group">
+                                                <input type="password" class="form-control" name="google_api_key" 
+                                                       placeholder="AIza..." data-provider="google">
+                                                <button class="btn btn-outline-secondary" type="button" 
+                                                        onclick="togglePassword(this)">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </div>
+                                            <div class="form-text">Your Google AI Studio API key</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Default Model</label>
+                                            <select class="form-control" name="google_model" data-provider="google">
+                                                <option value="gemini-pro">Gemini Pro</option>
+                                                <option value="gemini-pro-vision">Gemini Pro Vision</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Rate Limit (RPM)</label>
+                                            <input type="number" class="form-control" name="google_rate_limit" 
+                                                   value="60" data-provider="google">
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-outline-primary" 
+                                        onclick="testConnection('google')">
+                                    <i class="fas fa-plug me-2"></i>Test Connection
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Meta AI Configuration -->
+                        <div class="tab-pane fade" id="meta-config" role="tabpanel">
+                            <div class="provider-config-section">
+                                <h6>Meta AI Configuration</h6>
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    <strong>Note:</strong> Meta AI API is currently hypothetical. 
+                                    This configuration is for future compatibility.
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">API Key</label>
+                                            <div class="input-group">
+                                                <input type="password" class="form-control" name="meta_api_key" 
+                                                       placeholder="meta-..." data-provider="meta" disabled>
+                                                <button class="btn btn-outline-secondary" type="button" 
+                                                        onclick="togglePassword(this)">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </div>
+                                            <div class="form-text">Future Meta AI API key</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Default Model</label>
+                                            <select class="form-control" name="meta_model" data-provider="meta" disabled>
+                                                <option value="llama-2-7b-chat">Llama 2 7B Chat</option>
+                                                <option value="llama-2-13b-chat">Llama 2 13B Chat</option>
+                                                <option value="llama-2-70b-chat">Llama 2 70B Chat</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Hugging Face Configuration -->
+                        <div class="tab-pane fade" id="huggingface-config" role="tabpanel">
+                            <div class="provider-config-section">
+                                <h6>Hugging Face Configuration</h6>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">API Key <span class="text-danger">*</span></label>
+                                            <div class="input-group">
+                                                <input type="password" class="form-control" name="huggingface_api_key" 
+                                                       placeholder="hf_..." data-provider="huggingface">
+                                                <button class="btn btn-outline-secondary" type="button" 
+                                                        onclick="togglePassword(this)">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </div>
+                                            <div class="form-text">Your Hugging Face API token</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Default Model</label>
+                                            <input type="text" class="form-control" name="huggingface_model" 
+                                                   value="microsoft/DialoGPT-medium" data-provider="huggingface">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Rate Limit (RPM)</label>
+                                            <input type="number" class="form-control" name="huggingface_rate_limit" 
+                                                   value="1000" data-provider="huggingface">
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-outline-primary" 
+                                        onclick="testConnection('huggingface')">
+                                    <i class="fas fa-plug me-2"></i>Test Connection
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Cohere Configuration -->
+                        <div class="tab-pane fade" id="cohere-config" role="tabpanel">
+                            <div class="provider-config-section">
+                                <h6>Cohere Configuration</h6>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">API Key <span class="text-danger">*</span></label>
+                                            <div class="input-group">
+                                                <input type="password" class="form-control" name="cohere_api_key" 
+                                                       placeholder="..." data-provider="cohere">
+                                                <button class="btn btn-outline-secondary" type="button" 
+                                                        onclick="togglePassword(this)">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </div>
+                                            <div class="form-text">Your Cohere API key</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Default Model</label>
+                                            <select class="form-control" name="cohere_model" data-provider="cohere">
+                                                <option value="command">Command</option>
+                                                <option value="command-light">Command Light</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Rate Limit (RPM)</label>
+                                            <input type="number" class="form-control" name="cohere_rate_limit" 
+                                                   value="100" data-provider="cohere">
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-outline-primary" 
+                                        onclick="testConnection('cohere')">
+                                    <i class="fas fa-plug me-2"></i>Test Connection
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Test Results Modal -->
+<div class="modal fade" id="connectionTestModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-plug me-2"></i>
+                    Connection Test Results
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="connectionTestResults">
+                    <!-- Results will be loaded here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.provider-config-section {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.nav-tabs .nav-link {
+    border-radius: 8px 8px 0 0;
+    margin-right: 5px;
+}
+
+.nav-tabs .nav-link.active {
+    border-color: #007bff #007bff #fff;
+    background-color: #007bff;
+    color: white;
+}
+
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+}
+
+.provider-status {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.status-configured {
+    background-color: #28a745;
+}
+
+.status-not-configured {
+    background-color: #dc3545;
+}
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let connectionTestModal = null;
+
+document.addEventListener('DOMContentLoaded', function() {
+    connectionTestModal = new bootstrap.Modal(document.getElementById('connectionTestModal'));
+});
+
+function togglePassword(button) {
+    const input = button.previousElementSibling;
+    const icon = button.querySelector('i');
+    
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.className = 'fas fa-eye-slash';
+    } else {
+        input.type = 'password';
+        icon.className = 'fas fa-eye';
+    }
+}
+
+function validateConfiguration() {
+    fetch('/api/config/validate', { method: 'POST' })
+        .then(response => response.json())
+        .then(data => {
+            if (data.valid) {
+                showToast('Configuration is valid!', 'success');
+            } else {
+                showToast('Configuration has errors. Check details above.', 'warning');
+            }
+            
+            // Refresh the page to show updated validation results
+            setTimeout(() => {
+                location.reload();
+            }, 2000);
+        })
+        .catch(error => {
+            console.error('Validation error:', error);
+            showToast('Failed to validate configuration', 'danger');
+        });
+}
+
+function testConnection(provider) {
+    // Collect provider configuration
+    const form = document.getElementById('configurationForm');
+    const formData = new FormData(form);
+    const providerConfig = {};
+    
+    // Get all fields for this provider
+    const providerFields = form.querySelectorAll(`[data-provider="${provider}"]`);
+    providerFields.forEach(field => {
+        if (field.value) {
+            providerConfig[field.name] = field.value;
+        }
+    });
+    
+    // Show loading in modal
+    document.getElementById('connectionTestResults').innerHTML = `
+        <div class="text-center">
+            <div class="loading-spinner mx-auto mb-3"></div>
+            <p>Testing connection to ${provider}...</p>
+        </div>
+    `;
+    connectionTestModal.show();
+    
+    // Simulate connection test (replace with actual API call)
+    setTimeout(() => {
+        const success = Math.random() > 0.3; // 70% success rate for demo
+        
+        let resultHTML;
+        if (success) {
+            resultHTML = `
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle me-2"></i>
+                    <strong>Connection Successful!</strong><br>
+                    Successfully connected to ${provider.charAt(0).toUpperCase() + provider.slice(1)} API.
+                    <ul class="mt-2 mb-0">
+                        <li>API Key: Valid</li>
+                        <li>Rate Limit: Configured</li>
+                        <li>Model Access: Available</li>
+                        <li>Response Time: 150ms</li>
+                    </ul>
+                </div>
+            `;
+            showToast(`${provider} connection successful!`, 'success');
+        } else {
+            resultHTML = `
+                <div class="alert alert-danger">
+                    <i class="fas fa-times-circle me-2"></i>
+                    <strong>Connection Failed!</strong><br>
+                    Unable to connect to ${provider.charAt(0).toUpperCase() + provider.slice(1)} API.
+                    <ul class="mt-2 mb-0">
+                        <li>Error: Invalid API key or insufficient permissions</li>
+                        <li>Status Code: 401 Unauthorized</li>
+                        <li>Suggestion: Verify your API key and try again</li>
+                    </ul>
+                </div>
+            `;
+            showToast(`${provider} connection failed!`, 'danger');
+        }
+        
+        document.getElementById('connectionTestResults').innerHTML = resultHTML;
+    }, 2000);
+}
+
+function saveConfiguration() {
+    const form = document.getElementById('configurationForm');
+    const formData = new FormData(form);
+    const config = {};
+    
+    // Organize configuration by provider
+    const providers = ['openai', 'claude', 'google', 'meta', 'huggingface', 'cohere'];
+    
+    providers.forEach(provider => {
+        config[provider] = {};
+        const providerFields = form.querySelectorAll(`[data-provider="${provider}"]`);
+        
+        providerFields.forEach(field => {
+            if (field.value) {
+                config[provider][field.name] = field.value;
+            }
+        });
+    });
+    
+    // Save configuration
+    fetch('/api/config/save', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            api_configs: config,
+            test_config: {
+                run_live_tests: false,
+                mock_responses: true,
+                max_test_duration: 300,
+                concurrent_test_limit: 10,
+                output_dir: "test_results",
+                log_level: "INFO",
+                generate_reports: true
+            }
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            showToast('Configuration saved successfully!', 'success');
+            
+            // Refresh page after 2 seconds
+            setTimeout(() => {
+                location.reload();
+            }, 2000);
+        } else {
+            showToast('Failed to save configuration: ' + data.message, 'danger');
+        }
+    })
+    .catch(error => {
+        console.error('Save error:', error);
+        showToast('Failed to save configuration', 'danger');
+    });
+}
+
+function loadConfigTemplate() {
+    // This would typically load a configuration template
+    showToast('Configuration template loaded', 'info');
+    
+    // Example: Load template values
+    document.querySelector('[name="openai_api_key"]').value = 'your-openai-api-key';
+    document.querySelector('[name="claude_api_key"]').value = 'your-claude-api-key';
+    document.querySelector('[name="google_api_key"]').value = 'your-google-api-key';
+    
+    showToast('Template values loaded. Please replace with your actual API keys.', 'warning');
+}
+
+// Auto-save draft configuration to localStorage
+function saveDraft() {
+    const form = document.getElementById('configurationForm');
+    const formData = new FormData(form);
+    const draft = {};
+    
+    for (let [key, value] of formData.entries()) {
+        draft[key] = value;
+    }
+    
+    localStorage.setItem('configDraft', JSON.stringify(draft));
+}
+
+// Load draft configuration from localStorage
+function loadDraft() {
+    const draft = localStorage.getItem('configDraft');
+    if (draft) {
+        const draftData = JSON.parse(draft);
+        const form = document.getElementById('configurationForm');
+        
+        Object.keys(draftData).forEach(key => {
+            const field = form.querySelector(`[name="${key}"]`);
+            if (field) {
+                field.value = draftData[key];
+            }
+        });
+        
+        showToast('Draft configuration loaded', 'info');
+    }
+}
+
+// Save draft on input changes
+document.getElementById('configurationForm').addEventListener('input', saveDraft);
+
+// Load draft on page load
+window.addEventListener('load', loadDraft);
+</script>
+{% endblock %}

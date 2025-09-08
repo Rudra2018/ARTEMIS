@@ -1,0 +1,705 @@
+{% extends "base.html" %}
+
+{% block title %}Test Results - AI Testing Suite{% endblock %}
+
+{% block content %}
+<div class="row animate-in">
+    <div class="col-12 mb-4">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">
+                    <i class="fas fa-chart-bar me-2"></i>
+                    Test Results & Analytics
+                </h4>
+                <div>
+                    <button class="btn btn-outline-secondary me-2" onclick="refreshResults()">
+                        <i class="fas fa-refresh me-2"></i>Refresh
+                    </button>
+                    <button class="btn btn-outline-info" onclick="exportAllResults()">
+                        <i class="fas fa-download me-2"></i>Export All
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Summary Statistics -->
+<div class="row animate-in">
+    <div class="col-md-3 mb-4">
+        <div class="card metric-card">
+            <div class="card-body text-center">
+                <i class="fas fa-vial fa-2x mb-3"></i>
+                <h3 class="mb-1">{{ test_history|length }}</h3>
+                <small>Total Tests</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card metric-card-2">
+            <div class="card-body text-center">
+                <i class="fas fa-check-circle fa-2x mb-3"></i>
+                <h3 class="mb-1">
+                    {% set completed_tests = test_history|selectattr('status', 'equalto', 'completed')|list %}
+                    {{ completed_tests|length }}
+                </h3>
+                <small>Completed</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card metric-card-3">
+            <div class="card-body text-center">
+                <i class="fas fa-percentage fa-2x mb-3"></i>
+                <h3 class="mb-1" id="avgSuccessRate">
+                    {% if completed_tests %}
+                        {% set success_rates = [] %}
+                        {% for test in completed_tests %}
+                            {% if test.results and test.results.combined %}
+                                {% set _ = success_rates.append(test.results.combined.overall_success_rate) %}
+                            {% endif %}
+                        {% endfor %}
+                        {% if success_rates %}
+                            {{ ((success_rates|sum / success_rates|length) * 100)|round(1) }}%
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </h3>
+                <small>Avg Success Rate</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card metric-card-4">
+            <div class="card-body text-center">
+                <i class="fas fa-clock fa-2x mb-3"></i>
+                <h3 class="mb-1">
+                    {% if completed_tests %}
+                        {% set durations = [] %}
+                        {% for test in completed_tests %}
+                            {% if test.end_time %}
+                                {% set _ = durations.append((test.end_time - test.start_time).total_seconds()) %}
+                            {% endif %}
+                        {% endfor %}
+                        {% if durations %}
+                            {{ (durations|sum / durations|length)|round(0)|int }}s
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </h3>
+                <small>Avg Duration</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Section -->
+<div class="row animate-in">
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-pie me-2"></i>
+                    Test Status Distribution
+                </h5>
+            </div>
+            <div class="card-body">
+                <canvas id="statusChart" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-line me-2"></i>
+                    Success Rate Trend
+                </h5>
+            </div>
+            <div class="card-body">
+                <canvas id="trendChart" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Test Suite Performance -->
+<div class="row animate-in">
+    <div class="col-12 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-bar me-2"></i>
+                    Test Suite Performance
+                </h5>
+            </div>
+            <div class="card-body">
+                <canvas id="performanceChart" height="100"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Filters and Search -->
+<div class="row animate-in">
+    <div class="col-12 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-filter me-2"></i>
+                    Filter & Search Results
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label class="form-label">Status</label>
+                        <select class="form-select" id="statusFilter">
+                            <option value="">All Statuses</option>
+                            <option value="completed">Completed</option>
+                            <option value="failed">Failed</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Test Suite</label>
+                        <select class="form-select" id="suiteFilter">
+                            <option value="">All Suites</option>
+                            <option value="all">All Tests</option>
+                            <option value="core">Core LLM</option>
+                            <option value="api">API Integration</option>
+                            <option value="security">Security</option>
+                            <option value="performance">Performance</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Date Range</label>
+                        <select class="form-select" id="dateFilter">
+                            <option value="">All Time</option>
+                            <option value="today">Today</option>
+                            <option value="week">This Week</option>
+                            <option value="month">This Month</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Search</label>
+                        <input type="text" class="form-control" id="searchInput" 
+                               placeholder="Search test ID or config...">
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <button class="btn btn-primary me-2" onclick="applyFilters()">
+                            <i class="fas fa-filter me-2"></i>Apply Filters
+                        </button>
+                        <button class="btn btn-outline-secondary" onclick="clearFilters()">
+                            <i class="fas fa-times me-2"></i>Clear Filters
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Results Table -->
+<div class="row animate-in">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-list me-2"></i>
+                    Test Execution History
+                </h5>
+                <div class="d-flex align-items-center">
+                    <span class="me-3 text-muted">
+                        Showing <span id="resultCount">{{ test_history|length }}</span> results
+                    </span>
+                    <div class="btn-group" role="group">
+                        <button class="btn btn-outline-secondary btn-sm" onclick="changeView('table')">
+                            <i class="fas fa-table"></i>
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm" onclick="changeView('cards')">
+                            <i class="fas fa-th-large"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <!-- Table View -->
+                <div id="tableView">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0" id="resultsTable">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Test ID</th>
+                                    <th>Suite</th>
+                                    <th>Started</th>
+                                    <th>Duration</th>
+                                    <th>Status</th>
+                                    <th>Results</th>
+                                    <th>Success Rate</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for test in test_history %}
+                                <tr data-test-id="{{ test.test_id }}">
+                                    <td>
+                                        <code class="small">{{ test.test_id[:12] }}...</code>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-info">
+                                            {{ test.config.suite_type|upper if test.config and test.config.suite_type else 'ALL' }}
+                                        </span>
+                                    </td>
+                                    <td>{{ test.start_time.strftime('%m/%d/%Y %H:%M') }}</td>
+                                    <td>
+                                        {% if test.end_time %}
+                                            {{ ((test.end_time - test.start_time).total_seconds())|round(0)|int }}s
+                                        {% else %}
+                                            <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <span class="badge status-badge status-{{ test.status }}">
+                                            {{ test.status|title }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {% if test.results and test.results.combined %}
+                                            <small>
+                                                {{ test.results.combined.passed }}/{{ test.results.combined.total_tests }} passed
+                                            </small>
+                                        {% else %}
+                                            <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if test.results and test.results.combined %}
+                                            <div class="progress" style="height: 8px;">
+                                                <div class="progress-bar bg-success" 
+                                                     style="width: {{ (test.results.combined.overall_success_rate * 100)|round(1) }}%">
+                                                </div>
+                                            </div>
+                                            <small class="text-muted">
+                                                {{ (test.results.combined.overall_success_rate * 100)|round(1) }}%
+                                            </small>
+                                        {% else %}
+                                            <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a href="{{ url_for('view_test_results', test_id=test.test_id) }}" 
+                                               class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <div class="btn-group" role="group">
+                                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" 
+                                                        data-bs-toggle="dropdown">
+                                                    <i class="fas fa-download"></i>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <a class="dropdown-item" 
+                                                           href="/api/results/download/{{ test.test_id }}/json">
+                                                            <i class="fas fa-file-code me-2"></i>JSON
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" 
+                                                           href="/api/results/download/{{ test.test_id }}/html">
+                                                            <i class="fas fa-file-alt me-2"></i>HTML
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" 
+                                                           href="/api/results/download/{{ test.test_id }}/junit">
+                                                            <i class="fas fa-file-code me-2"></i>JUnit XML
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Card View -->
+                <div id="cardView" style="display: none;">
+                    <div class="row p-3">
+                        {% for test in test_history %}
+                        <div class="col-md-6 col-lg-4 mb-4" data-test-id="{{ test.test_id }}">
+                            <div class="card h-100">
+                                <div class="card-header">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <code class="small">{{ test.test_id[:12] }}...</code>
+                                        <span class="badge status-badge status-{{ test.status }}">
+                                            {{ test.status|title }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <h6 class="card-title">
+                                        <span class="badge bg-info">
+                                            {{ test.config.suite_type|upper if test.config and test.config.suite_type else 'ALL' }}
+                                        </span>
+                                    </h6>
+                                    <p class="card-text small text-muted">
+                                        <i class="fas fa-clock me-1"></i>
+                                        {{ test.start_time.strftime('%m/%d/%Y %H:%M') }}
+                                        {% if test.end_time %}
+                                            <br>
+                                            <i class="fas fa-stopwatch me-1"></i>
+                                            Duration: {{ ((test.end_time - test.start_time).total_seconds())|round(0)|int }}s
+                                        {% endif %}
+                                    </p>
+                                    {% if test.results and test.results.combined %}
+                                    <div class="mb-2">
+                                        <div class="progress mb-1" style="height: 8px;">
+                                            <div class="progress-bar bg-success" 
+                                                 style="width: {{ (test.results.combined.overall_success_rate * 100)|round(1) }}%">
+                                            </div>
+                                        </div>
+                                        <small class="text-muted">
+                                            {{ test.results.combined.passed }}/{{ test.results.combined.total_tests }} tests passed 
+                                            ({{ (test.results.combined.overall_success_rate * 100)|round(1) }}%)
+                                        </small>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="card-footer">
+                                    <div class="btn-group w-100" role="group">
+                                        <a href="{{ url_for('view_test_results', test_id=test.test_id) }}" 
+                                           class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye me-1"></i>View
+                                        </a>
+                                        <button class="btn btn-sm btn-outline-secondary" 
+                                                onclick="downloadResult('{{ test.test_id }}', 'json')">
+                                            <i class="fas fa-download me-1"></i>Export
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Empty State -->
+{% if not test_history %}
+<div class="row animate-in">
+    <div class="col-12">
+        <div class="text-center py-5">
+            <i class="fas fa-chart-bar fa-5x text-muted mb-4"></i>
+            <h3 class="text-muted">No Test Results Yet</h3>
+            <p class="text-muted mb-4">
+                Run your first test to see results and analytics here.
+            </p>
+            <a href="{{ url_for('test_page') }}" class="btn btn-primary btn-lg">
+                <i class="fas fa-play me-2"></i>
+                Run Your First Test
+            </a>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+let statusChart, trendChart, performanceChart;
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize charts if we have data
+    {% if test_history %}
+    initializeCharts();
+    {% endif %}
+});
+
+function initializeCharts() {
+    // Status Distribution Chart
+    const statusData = getStatusDistribution();
+    const statusCtx = document.getElementById('statusChart').getContext('2d');
+    statusChart = new Chart(statusCtx, {
+        type: 'doughnut',
+        data: {
+            labels: Object.keys(statusData),
+            datasets: [{
+                data: Object.values(statusData),
+                backgroundColor: [
+                    '#28a745',  // completed
+                    '#dc3545',  // failed
+                    '#ffc107',  // cancelled
+                    '#6c757d'   // pending
+                ],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+
+    // Success Rate Trend Chart
+    const trendData = getSuccessRateTrend();
+    const trendCtx = document.getElementById('trendChart').getContext('2d');
+    trendChart = new Chart(trendCtx, {
+        type: 'line',
+        data: {
+            labels: trendData.labels,
+            datasets: [{
+                label: 'Success Rate %',
+                data: trendData.data,
+                borderColor: '#007bff',
+                backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    ticks: {
+                        callback: function(value) {
+                            return value + '%';
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Performance Chart
+    const performanceData = getPerformanceData();
+    const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+    performanceChart = new Chart(performanceCtx, {
+        type: 'bar',
+        data: {
+            labels: performanceData.labels,
+            datasets: [{
+                label: 'Average Duration (seconds)',
+                data: performanceData.durations,
+                backgroundColor: 'rgba(54, 162, 235, 0.8)',
+                yAxisID: 'y'
+            }, {
+                label: 'Success Rate (%)',
+                data: performanceData.successRates,
+                type: 'line',
+                borderColor: 'rgb(255, 99, 132)',
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                yAxisID: 'y1'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                mode: 'index',
+                intersect: false,
+            },
+            scales: {
+                y: {
+                    type: 'linear',
+                    display: true,
+                    position: 'left',
+                },
+                y1: {
+                    type: 'linear',
+                    display: true,
+                    position: 'right',
+                    grid: {
+                        drawOnChartArea: false,
+                    },
+                    ticks: {
+                        callback: function(value) {
+                            return value + '%';
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+function getStatusDistribution() {
+    const testHistory = {{ test_history|tojson }};
+    const distribution = {};
+    
+    testHistory.forEach(test => {
+        distribution[test.status] = (distribution[test.status] || 0) + 1;
+    });
+    
+    return distribution;
+}
+
+function getSuccessRateTrend() {
+    const testHistory = {{ test_history|tojson }};
+    const labels = [];
+    const data = [];
+    
+    // Sort by start time and get last 10 tests
+    const sortedTests = testHistory
+        .filter(test => test.results && test.results.combined)
+        .sort((a, b) => new Date(a.start_time) - new Date(b.start_time))
+        .slice(-10);
+    
+    sortedTests.forEach(test => {
+        const date = new Date(test.start_time);
+        labels.push(date.toLocaleDateString());
+        data.push((test.results.combined.overall_success_rate * 100).toFixed(1));
+    });
+    
+    return { labels, data };
+}
+
+function getPerformanceData() {
+    const testHistory = {{ test_history|tojson }};
+    const suiteData = {};
+    
+    testHistory.forEach(test => {
+        if (!test.config || !test.config.suite_type) return;
+        
+        const suite = test.config.suite_type;
+        if (!suiteData[suite]) {
+            suiteData[suite] = {
+                durations: [],
+                successRates: []
+            };
+        }
+        
+        if (test.end_time) {
+            const duration = (new Date(test.end_time) - new Date(test.start_time)) / 1000;
+            suiteData[suite].durations.push(duration);
+        }
+        
+        if (test.results && test.results.combined) {
+            suiteData[suite].successRates.push(test.results.combined.overall_success_rate * 100);
+        }
+    });
+    
+    const labels = Object.keys(suiteData);
+    const durations = labels.map(suite => {
+        const avg = suiteData[suite].durations.reduce((a, b) => a + b, 0) / suiteData[suite].durations.length;
+        return avg || 0;
+    });
+    const successRates = labels.map(suite => {
+        const avg = suiteData[suite].successRates.reduce((a, b) => a + b, 0) / suiteData[suite].successRates.length;
+        return avg || 0;
+    });
+    
+    return { labels, durations, successRates };
+}
+
+function applyFilters() {
+    const statusFilter = document.getElementById('statusFilter').value;
+    const suiteFilter = document.getElementById('suiteFilter').value;
+    const dateFilter = document.getElementById('dateFilter').value;
+    const searchInput = document.getElementById('searchInput').value.toLowerCase();
+    
+    const rows = document.querySelectorAll('#resultsTable tbody tr, #cardView .col-md-6');
+    let visibleCount = 0;
+    
+    rows.forEach(row => {
+        let visible = true;
+        
+        // Status filter
+        if (statusFilter && !row.querySelector('.status-' + statusFilter)) {
+            visible = false;
+        }
+        
+        // Search filter
+        if (searchInput && !row.textContent.toLowerCase().includes(searchInput)) {
+            visible = false;
+        }
+        
+        // Show/hide row
+        if (visible) {
+            row.style.display = '';
+            visibleCount++;
+        } else {
+            row.style.display = 'none';
+        }
+    });
+    
+    document.getElementById('resultCount').textContent = visibleCount;
+}
+
+function clearFilters() {
+    document.getElementById('statusFilter').value = '';
+    document.getElementById('suiteFilter').value = '';
+    document.getElementById('dateFilter').value = '';
+    document.getElementById('searchInput').value = '';
+    
+    const rows = document.querySelectorAll('#resultsTable tbody tr, #cardView .col-md-6');
+    rows.forEach(row => {
+        row.style.display = '';
+    });
+    
+    document.getElementById('resultCount').textContent = rows.length;
+}
+
+function changeView(viewType) {
+    const tableView = document.getElementById('tableView');
+    const cardView = document.getElementById('cardView');
+    
+    if (viewType === 'table') {
+        tableView.style.display = 'block';
+        cardView.style.display = 'none';
+    } else {
+        tableView.style.display = 'none';
+        cardView.style.display = 'block';
+    }
+}
+
+function refreshResults() {
+    showToast('Refreshing results...', 'info');
+    setTimeout(() => {
+        location.reload();
+    }, 1000);
+}
+
+function exportAllResults() {
+    showToast('Preparing export...', 'info');
+    // Implement bulk export functionality
+    setTimeout(() => {
+        showToast('Export functionality coming soon!', 'info');
+    }, 1000);
+}
+
+function downloadResult(testId, format) {
+    window.open(`/api/results/download/${testId}/${format}`, '_blank');
+}
+
+// Auto-apply filters on input
+document.getElementById('searchInput').addEventListener('input', applyFilters);
+document.getElementById('statusFilter').addEventListener('change', applyFilters);
+document.getElementById('suiteFilter').addEventListener('change', applyFilters);
+document.getElementById('dateFilter').addEventListener('change', applyFilters);
+</script>
+{% endblock %}

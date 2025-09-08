@@ -1,0 +1,447 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - AI Testing Suite{% endblock %}
+
+{% block content %}
+<div class="row animate-in">
+    <!-- Welcome Section -->
+    <div class="col-12 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h1 class="mb-3">
+                            <i class="fas fa-robot text-primary me-2"></i>
+                            AI Chatbot Testing Suite
+                        </h1>
+                        <p class="lead mb-3">
+                            Comprehensive testing platform for LLM AI chatbots, ML models, and AI platforms 
+                            including OpenAI, Claude, Google AI Studio, Meta AI, and more.
+                        </p>
+                        <div class="d-flex gap-2">
+                            <a href="{{ url_for('test_page') }}" class="btn btn-primary">
+                                <i class="fas fa-play me-2"></i>Start Testing
+                            </a>
+                            <a href="{{ url_for('config_page') }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-cog me-2"></i>Configure APIs
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <i class="fas fa-brain fa-5x text-primary opacity-25"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row animate-in">
+    <!-- System Status Cards -->
+    <div class="col-md-3 mb-4">
+        <div class="card metric-card">
+            <div class="card-body text-center">
+                <i class="fas fa-cogs fa-2x mb-3"></i>
+                <h4 class="mb-1" id="configuredProviders">{{ config_manager.get_available_providers()|length }}</h4>
+                <small>Configured Providers</small>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-4">
+        <div class="card metric-card-2">
+            <div class="card-body text-center">
+                <i class="fas fa-vial fa-2x mb-3"></i>
+                <h4 class="mb-1" id="totalTests">{{ test_history|length }}</h4>
+                <small>Total Tests Run</small>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-4">
+        <div class="card metric-card-3">
+            <div class="card-body text-center">
+                <i class="fas fa-chart-line fa-2x mb-3"></i>
+                <h4 class="mb-1" id="successRate">
+                    {% set passed_tests = test_history|selectattr('status', 'equalto', 'completed')|list|length %}
+                    {% if test_history|length > 0 %}
+                        {{ ((passed_tests / test_history|length) * 100)|round(1) }}%
+                    {% else %}
+                        0%
+                    {% endif %}
+                </h4>
+                <small>Success Rate</small>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-4">
+        <div class="card metric-card-4">
+            <div class="card-body text-center">
+                <i class="fas fa-clock fa-2x mb-3"></i>
+                <h4 class="mb-1" id="runningTests">0</h4>
+                <small>Tests Running</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row animate-in">
+    <!-- Available Providers -->
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-plug me-2"></i>
+                    API Providers Status
+                </h5>
+            </div>
+            <div class="card-body">
+                <div id="providersStatus">
+                    <!-- Provider status will be loaded here -->
+                    <div class="text-center">
+                        <div class="loading-spinner mx-auto"></div>
+                        <p class="mt-2">Loading provider status...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quick Actions -->
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-bolt me-2"></i>
+                    Quick Actions
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-3">
+                    <button class="btn btn-outline-primary" onclick="runQuickTest('core')">
+                        <i class="fas fa-brain me-2"></i>
+                        Run Core LLM Tests
+                    </button>
+                    <button class="btn btn-outline-info" onclick="runQuickTest('api')">
+                        <i class="fas fa-cloud me-2"></i>
+                        Run API Integration Tests
+                    </button>
+                    <button class="btn btn-outline-warning" onclick="runQuickTest('security')">
+                        <i class="fas fa-shield-alt me-2"></i>
+                        Run Security Tests
+                    </button>
+                    <button class="btn btn-outline-success" onclick="runQuickTest('performance')">
+                        <i class="fas fa-tachometer-alt me-2"></i>
+                        Run Performance Tests
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row animate-in">
+    <!-- Recent Test Results -->
+    <div class="col-12 mb-4">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-history me-2"></i>
+                    Recent Test Results
+                </h5>
+                <a href="{{ url_for('results_page') }}" class="btn btn-sm btn-outline-primary">
+                    View All Results
+                </a>
+            </div>
+            <div class="card-body">
+                {% if test_history %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Test ID</th>
+                                <th>Start Time</th>
+                                <th>Duration</th>
+                                <th>Status</th>
+                                <th>Results</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for test in test_history %}
+                            <tr>
+                                <td>
+                                    <code class="small">{{ test.test_id[:8] }}...</code>
+                                </td>
+                                <td>{{ test.start_time.strftime('%m/%d %H:%M') }}</td>
+                                <td>
+                                    {% if test.end_time %}
+                                        {{ ((test.end_time - test.start_time).total_seconds())|int }}s
+                                    {% else %}
+                                        <span class="text-muted">Running</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge status-badge status-{{ test.status }}">
+                                        {{ test.status|title }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if test.results and test.results.combined %}
+                                        <small class="text-muted">
+                                            {{ test.results.combined.passed }}/{{ test.results.combined.total_tests }} passed
+                                        </small>
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('view_test_results', test_id=test.test_id) }}" 
+                                       class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-eye me-1"></i>View
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                    <h6 class="text-muted">No test results yet</h6>
+                    <p class="text-muted">Run your first test to see results here.</p>
+                    <a href="{{ url_for('test_page') }}" class="btn btn-primary">
+                        <i class="fas fa-play me-2"></i>Start Testing
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Test Progress Modal -->
+<div class="modal fade" id="testProgressModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Test Execution Progress</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <div class="progress">
+                        <div id="testProgress" class="progress-bar progress-bar-striped progress-bar-animated" 
+                             role="progressbar" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div id="testMessage" class="text-center">
+                    Preparing to start test...
+                </div>
+                <div id="testLog" class="test-log mt-3 p-3 d-none">
+                    <!-- Test logs will appear here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" id="cancelTest">
+                    <i class="fas fa-stop me-2"></i>Cancel Test
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let currentTestId = null;
+let progressModal = null;
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize modal
+    progressModal = new bootstrap.Modal(document.getElementById('testProgressModal'));
+    
+    // Load provider status
+    loadProviderStatus();
+    
+    // Setup socket event listeners
+    setupSocketListeners();
+});
+
+function loadProviderStatus() {
+    fetch('/api/providers')
+        .then(response => response.json())
+        .then(providers => {
+            const container = document.getElementById('providersStatus');
+            container.innerHTML = '';
+            
+            providers.forEach(provider => {
+                const providerCard = document.createElement('div');
+                providerCard.className = 'mb-3 p-3 border rounded';
+                
+                const statusIcon = provider.configured ? 
+                    '<i class="fas fa-check-circle text-success"></i>' : 
+                    '<i class="fas fa-times-circle text-danger"></i>';
+                
+                const statusText = provider.configured ? 'Configured' : 'Not Configured';
+                const statusClass = provider.configured ? 'text-success' : 'text-danger';
+                
+                providerCard.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>${provider.display_name}</strong>
+                            <br>
+                            <small class="text-muted">
+                                ${provider.configured ? `Model: ${provider.model}` : 'No API key configured'}
+                            </small>
+                        </div>
+                        <div class="text-end">
+                            ${statusIcon}
+                            <br>
+                            <small class="${statusClass}">${statusText}</small>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(providerCard);
+            });
+        })
+        .catch(error => {
+            console.error('Failed to load provider status:', error);
+            document.getElementById('providersStatus').innerHTML = 
+                '<div class="alert alert-danger">Failed to load provider status</div>';
+        });
+}
+
+function runQuickTest(suiteType) {
+    const testConfig = {
+        suite_type: suiteType,
+        providers: [],
+        live_mode: false,
+        mock_responses: true
+    };
+    
+    // Show progress modal
+    progressModal.show();
+    
+    // Start test
+    fetch('/api/test/start', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(testConfig)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            showToast('Error starting test: ' + data.error, 'danger');
+            progressModal.hide();
+        } else {
+            currentTestId = data.test_id;
+            document.getElementById('testMessage').textContent = 'Test started...';
+            
+            // Join test room for updates
+            socket.emit('join_test', { test_id: currentTestId });
+            
+            showToast('Test started successfully!', 'success');
+        }
+    })
+    .catch(error => {
+        console.error('Error starting test:', error);
+        showToast('Failed to start test', 'danger');
+        progressModal.hide();
+    });
+}
+
+function setupSocketListeners() {
+    socket.on('test_progress_update', function(data) {
+        if (data.test_id === currentTestId) {
+            const progressBar = document.getElementById('testProgress');
+            const messageDiv = document.getElementById('testMessage');
+            
+            progressBar.style.width = data.progress + '%';
+            progressBar.textContent = data.progress + '%';
+            messageDiv.textContent = data.message;
+        }
+    });
+    
+    socket.on('test_completed', function(data) {
+        if (data.test_id === currentTestId) {
+            const progressBar = document.getElementById('testProgress');
+            const messageDiv = document.getElementById('testMessage');
+            
+            progressBar.style.width = '100%';
+            progressBar.classList.remove('progress-bar-striped', 'progress-bar-animated');
+            progressBar.classList.add('bg-success');
+            
+            messageDiv.innerHTML = `
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle me-2"></i>
+                    Test completed successfully!<br>
+                    <small>
+                        ${data.results.passed}/${data.results.total_tests} tests passed 
+                        (${(data.results.overall_success_rate * 100).toFixed(1)}% success rate)
+                    </small>
+                </div>
+            `;
+            
+            showToast('Test completed successfully!', 'success');
+            
+            // Update dashboard metrics
+            setTimeout(() => {
+                location.reload();
+            }, 2000);
+        }
+    });
+    
+    socket.on('test_failed', function(data) {
+        if (data.test_id === currentTestId) {
+            const progressBar = document.getElementById('testProgress');
+            const messageDiv = document.getElementById('testMessage');
+            
+            progressBar.classList.remove('progress-bar-striped', 'progress-bar-animated');
+            progressBar.classList.add('bg-danger');
+            
+            messageDiv.innerHTML = `
+                <div class="alert alert-danger">
+                    <i class="fas fa-times-circle me-2"></i>
+                    Test failed: ${data.error}
+                </div>
+            `;
+            
+            showToast('Test execution failed', 'danger');
+        }
+    });
+}
+
+document.getElementById('cancelTest').addEventListener('click', function() {
+    if (currentTestId) {
+        fetch(`/api/test/cancel/${currentTestId}`, { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                showToast('Test cancelled', 'warning');
+                progressModal.hide();
+            })
+            .catch(error => {
+                console.error('Error cancelling test:', error);
+                showToast('Failed to cancel test', 'danger');
+            });
+    }
+});
+
+// Auto-refresh dashboard every 30 seconds
+setInterval(() => {
+    // Update running tests count and other metrics
+    fetch('/api/test/status')
+        .then(response => response.json())
+        .then(data => {
+            // Update metrics if needed
+        })
+        .catch(error => console.error('Error updating dashboard:', error));
+}, 30000);
+</script>
+{% endblock %}

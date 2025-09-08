@@ -1,0 +1,509 @@
+{% extends "base.html" %}
+
+{% block title %}Test Details - {{ test_id[:8] }}... - AI Testing Suite{% endblock %}
+
+{% block content %}
+<div class="row animate-in">
+    <div class="col-12 mb-4">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h2>
+                    <i class="fas fa-microscope me-2"></i>
+                    Test Results Detail
+                </h2>
+                <p class="text-muted mb-0">
+                    Test ID: <code>{{ test_id }}</code>
+                </p>
+            </div>
+            <div>
+                <a href="{{ url_for('results_page') }}" class="btn btn-outline-secondary me-2">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Results
+                </a>
+                <div class="btn-group" role="group">
+                    <button class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown">
+                        <i class="fas fa-download me-2"></i>Export
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-item" href="/api/results/download/{{ test_id }}/json">
+                                <i class="fas fa-file-code me-2"></i>JSON Report
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="/api/results/download/{{ test_id }}/html">
+                                <i class="fas fa-file-alt me-2"></i>HTML Report
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="/api/results/download/{{ test_id }}/junit">
+                                <i class="fas fa-file-code me-2"></i>JUnit XML
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Test Overview -->
+<div class="row animate-in">
+    <div class="col-12 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Test Overview
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <h6>Status</h6>
+                        <span class="badge status-badge status-{{ test_data.status }} fs-6">
+                            {{ test_data.status|title }}
+                        </span>
+                    </div>
+                    <div class="col-md-3">
+                        <h6>Suite Type</h6>
+                        <span class="badge bg-info fs-6">
+                            {{ test_data.config.suite_type|upper if test_data.config and test_data.config.suite_type else 'ALL' }}
+                        </span>
+                    </div>
+                    <div class="col-md-3">
+                        <h6>Execution Mode</h6>
+                        <span class="badge bg-secondary fs-6">
+                            {{ 'Live' if test_data.config and test_data.config.live_mode else 'Mock' }}
+                        </span>
+                    </div>
+                    <div class="col-md-3">
+                        <h6>Duration</h6>
+                        {% if test_data.end_time %}
+                            <span class="fs-6">
+                                {{ ((test_data.end_time - test_data.start_time).total_seconds())|round(0)|int }}s
+                            </span>
+                        {% else %}
+                            <span class="text-muted fs-6">Running...</span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <hr>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Started</h6>
+                        <p>{{ test_data.start_time.strftime('%A, %B %d, %Y at %I:%M %p') }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Completed</h6>
+                        <p>
+                            {% if test_data.end_time %}
+                                {{ test_data.end_time.strftime('%A, %B %d, %Y at %I:%M %p') }}
+                            {% else %}
+                                <span class="text-muted">Still running...</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+
+                {% if test_data.config %}
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <h6>Configuration</h6>
+                        <div class="bg-light p-3 rounded">
+                            <div class="row">
+                                {% if test_data.config.providers %}
+                                <div class="col-md-6">
+                                    <strong>Providers:</strong>
+                                    <ul class="mb-0">
+                                        {% for provider in test_data.config.providers %}
+                                        <li>{{ provider }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                                {% endif %}
+                                <div class="col-md-6">
+                                    <strong>Settings:</strong>
+                                    <ul class="mb-0">
+                                        <li>Timeout: {{ test_data.config.timeout|default(300) }}s</li>
+                                        <li>Max Retries: {{ test_data.config.max_retries|default(3) }}</li>
+                                        <li>Reports: {{ 'Enabled' if test_data.config.generate_reports else 'Disabled' }}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Results Summary -->
+{% if test_data.results and test_data.results.combined %}
+{% set combined = test_data.results.combined %}
+<div class="row animate-in">
+    <!-- Summary Cards -->
+    <div class="col-md-3 mb-4">
+        <div class="card metric-card">
+            <div class="card-body text-center">
+                <i class="fas fa-vial fa-2x mb-3"></i>
+                <h3 class="mb-1">{{ combined.total_tests }}</h3>
+                <small>Total Tests</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card metric-card-2">
+            <div class="card-body text-center">
+                <i class="fas fa-check-circle fa-2x mb-3"></i>
+                <h3 class="mb-1">{{ combined.passed }}</h3>
+                <small>Passed</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card metric-card-3">
+            <div class="card-body text-center">
+                <i class="fas fa-times-circle fa-2x mb-3"></i>
+                <h3 class="mb-1">{{ combined.failed }}</h3>
+                <small>Failed</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card metric-card-4">
+            <div class="card-body text-center">
+                <i class="fas fa-percentage fa-2x mb-3"></i>
+                <h3 class="mb-1">{{ (combined.overall_success_rate * 100)|round(1) }}%</h3>
+                <small>Success Rate</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Progress Visualization -->
+<div class="row animate-in">
+    <div class="col-12 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-pie me-2"></i>
+                    Results Breakdown
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <canvas id="resultsChart" height="100"></canvas>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="d-flex flex-column h-100 justify-content-center">
+                            <div class="text-center">
+                                <h2 class="text-primary">{{ (combined.overall_success_rate * 100)|round(1) }}%</h2>
+                                <p class="text-muted mb-4">Overall Success Rate</p>
+                            </div>
+                            <div class="progress mb-2" style="height: 20px;">
+                                <div class="progress-bar bg-success" style="width: {{ (combined.passed / combined.total_tests * 100)|round(1) }}%"></div>
+                                <div class="progress-bar bg-danger" style="width: {{ (combined.failed / combined.total_tests * 100)|round(1) }}%"></div>
+                                <div class="progress-bar bg-warning" style="width: {{ (combined.errors / combined.total_tests * 100)|round(1) }}%"></div>
+                            </div>
+                            <div class="row text-center">
+                                <div class="col-4">
+                                    <small class="text-success">{{ combined.passed }} Passed</small>
+                                </div>
+                                <div class="col-4">
+                                    <small class="text-danger">{{ combined.failed }} Failed</small>
+                                </div>
+                                <div class="col-4">
+                                    <small class="text-warning">{{ combined.errors }} Errors</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Suite Results -->
+<div class="row animate-in">
+    <div class="col-12 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-list me-2"></i>
+                    Test Suite Results
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if combined.suite_results %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Suite Name</th>
+                                <th>Tests Run</th>
+                                <th>Passed</th>
+                                <th>Failed</th>
+                                <th>Errors</th>
+                                <th>Success Rate</th>
+                                <th>Progress</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for suite_name, suite_data in combined.suite_results.items() %}
+                            <tr>
+                                <td>
+                                    <strong>{{ suite_name.replace('Tests', '').replace('Integration', 'API') }}</strong>
+                                </td>
+                                <td>{{ suite_data.tests_run }}</td>
+                                <td class="text-success">{{ suite_data.tests_run - suite_data.failures - suite_data.errors }}</td>
+                                <td class="text-danger">{{ suite_data.failures }}</td>
+                                <td class="text-warning">{{ suite_data.errors }}</td>
+                                <td>
+                                    <span class="badge {% if suite_data.success_rate >= 0.8 %}bg-success{% elif suite_data.success_rate >= 0.6 %}bg-warning{% else %}bg-danger{% endif %}">
+                                        {{ (suite_data.success_rate * 100)|round(1) }}%
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar bg-success" 
+                                             style="width: {{ (suite_data.success_rate * 100)|round(1) }}%">
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-info-circle fa-2x text-muted mb-3"></i>
+                    <p class="text-muted">No detailed suite results available</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="row animate-in">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body text-center py-5">
+                {% if test_data.status == 'completed' %}
+                <i class="fas fa-exclamation-triangle fa-3x text-warning mb-3"></i>
+                <h4>No Results Data</h4>
+                <p class="text-muted">This test completed but no results data is available.</p>
+                {% elif test_data.status == 'failed' %}
+                <i class="fas fa-times-circle fa-3x text-danger mb-3"></i>
+                <h4>Test Failed</h4>
+                <p class="text-muted">This test failed to execute properly.</p>
+                {% elif test_data.status == 'cancelled' %}
+                <i class="fas fa-ban fa-3x text-warning mb-3"></i>
+                <h4>Test Cancelled</h4>
+                <p class="text-muted">This test was cancelled before completion.</p>
+                {% else %}
+                <i class="fas fa-spinner fa-spin fa-3x text-info mb-3"></i>
+                <h4>Test In Progress</h4>
+                <p class="text-muted">This test is still running. Results will appear here when completed.</p>
+                <button class="btn btn-primary" onclick="location.reload()">
+                    <i class="fas fa-refresh me-2"></i>Refresh Page
+                </button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Performance Insights -->
+{% if test_data.results and test_data.results.combined %}
+<div class="row animate-in">
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-lightbulb me-2"></i>
+                    Performance Insights
+                </h5>
+            </div>
+            <div class="card-body">
+                {% set insights = [] %}
+                {% if combined.overall_success_rate >= 0.95 %}
+                    {% set _ = insights.append(('success', 'Excellent performance with 95%+ success rate')) %}
+                {% elif combined.overall_success_rate >= 0.8 %}
+                    {% set _ = insights.append(('info', 'Good performance with 80%+ success rate')) %}
+                {% else %}
+                    {% set _ = insights.append(('warning', 'Performance needs improvement - below 80% success rate')) %}
+                {% endif %}
+                
+                {% if combined.failed > 0 %}
+                    {% set _ = insights.append(('danger', combined.failed ~ ' tests failed - review error details')) %}
+                {% endif %}
+                
+                {% if combined.errors > 0 %}
+                    {% set _ = insights.append(('warning', combined.errors ~ ' tests had errors - check system stability')) %}
+                {% endif %}
+                
+                {% if test_data.end_time %}
+                    {% set duration = (test_data.end_time - test_data.start_time).total_seconds() %}
+                    {% if duration < 60 %}
+                        {% set _ = insights.append(('success', 'Fast execution - completed in under 1 minute')) %}
+                    {% elif duration > 300 %}
+                        {% set _ = insights.append(('info', 'Long execution - took over 5 minutes')) %}
+                    {% endif %}
+                {% endif %}
+                
+                {% for type, message in insights %}
+                <div class="alert alert-{{ type }} py-2">
+                    <i class="fas fa-{% if type == 'success' %}check-circle{% elif type == 'danger' %}times-circle{% elif type == 'warning' %}exclamation-triangle{% else %}info-circle{% endif %} me-2"></i>
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-tools me-2"></i>
+                    Recommendations
+                </h5>
+            </div>
+            <div class="card-body">
+                {% set recommendations = [] %}
+                
+                {% if combined.overall_success_rate < 0.8 %}
+                    {% set _ = recommendations.append('Review failed tests and address underlying issues') %}
+                {% endif %}
+                
+                {% if combined.errors > combined.failed %}
+                    {% set _ = recommendations.append('Check system stability and API configurations') %}
+                {% endif %}
+                
+                {% if test_data.config and test_data.config.live_mode %}
+                    {% set _ = recommendations.append('Consider running in mock mode for faster feedback during development') %}
+                {% else %}
+                    {% set _ = recommendations.append('Run live tests periodically to validate real API integrations') %}
+                {% endif %}
+                
+                {% set _ = recommendations.append('Schedule regular automated test runs for continuous monitoring') %}
+                
+                {% if recommendations %}
+                <ul class="mb-0">
+                    {% for rec in recommendations %}
+                    <li class="mb-2">{{ rec }}</li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <div class="text-center text-muted">
+                    <i class="fas fa-thumbs-up fa-2x mb-2"></i>
+                    <p>Everything looks great! Keep up the good work.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Action Buttons -->
+<div class="row animate-in">
+    <div class="col-12 text-center">
+        <div class="btn-group" role="group">
+            <a href="{{ url_for('test_page') }}" class="btn btn-primary">
+                <i class="fas fa-play me-2"></i>Run Similar Test
+            </a>
+            <a href="{{ url_for('results_page') }}" class="btn btn-outline-secondary">
+                <i class="fas fa-list me-2"></i>View All Results
+            </a>
+            {% if test_data.status == 'completed' %}
+            <button class="btn btn-outline-info" onclick="shareResults()">
+                <i class="fas fa-share me-2"></i>Share Results
+            </button>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    {% if test_data.results and test_data.results.combined %}
+    initializeResultsChart();
+    {% endif %}
+});
+
+function initializeResultsChart() {
+    const combined = {{ test_data.results.combined|tojson }};
+    const ctx = document.getElementById('resultsChart').getContext('2d');
+    
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Passed', 'Failed', 'Errors'],
+            datasets: [{
+                data: [combined.passed, combined.failed, combined.errors],
+                backgroundColor: ['#28a745', '#dc3545', '#ffc107'],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 20,
+                        usePointStyle: true
+                    }
+                }
+            },
+            elements: {
+                arc: {
+                    borderWidth: 0
+                }
+            }
+        }
+    });
+}
+
+function shareResults() {
+    const testId = "{{ test_id }}";
+    const url = window.location.href;
+    
+    if (navigator.share) {
+        navigator.share({
+            title: `AI Test Results - ${testId.substring(0, 8)}...`,
+            text: 'Check out these AI chatbot test results',
+            url: url
+        });
+    } else {
+        // Fallback: copy to clipboard
+        navigator.clipboard.writeText(url).then(() => {
+            showToast('Results URL copied to clipboard!', 'success');
+        }).catch(() => {
+            // Fallback: show URL in modal
+            alert(`Share this URL:\n${url}`);
+        });
+    }
+}
+
+// Auto-refresh if test is still running
+{% if test_data.status not in ['completed', 'failed', 'cancelled'] %}
+setTimeout(() => {
+    location.reload();
+}, 30000); // Refresh every 30 seconds
+{% endif %}
+</script>
+{% endblock %}
