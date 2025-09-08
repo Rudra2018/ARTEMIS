@@ -1,0 +1,23 @@
+
+<!doctype html> <html><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>AI LLM Security</title></head> <body><div id="root"></div><script type="module" src="/src/main.jsx"></script></body></html> EOF
+cat > dashboards/src/main.jsx <<'EOF'
+import React from "react";
+import { createRoot } from "react-dom/client";
+
+function App(){
+const [data, setData] = React.useState([]);
+React.useEffect(()=>{ fetch("/results.csv").then(r=>r.text()).then(t=>{
+// extremely simple CSV viewer (expects dev proxy or static copy)
+const lines=t.trim().split("\n"); const head=lines.shift().split(",");
+setData(lines.map(l=>Object.fromEntries(l.split(",").map((v,i)=>[head[i],v]))));
+}).catch(()=>{}); },[]);
+return (
+<div style={{fontFamily:"system-ui",padding:20}}>
+<h1>AI Chatbot Security — Results</h1>
+<p>Rows: {data.length}</p>
+<table border="1" cellPadding="6"><thead><tr>{Object.keys(data[0]||{}).map(k=><th key={k}>{k}</th>)}</tr></thead>
+<tbody>{data.map((r,i)=><tr key={i}>{Object.values(r).map((v,j)=><td key={j}>{v}</td>)}</tr>)}</tbody></table>
+</div>
+);
+}
+createRoot(document.getElementById("root")).render(<App/>);
