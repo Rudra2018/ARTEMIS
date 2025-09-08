@@ -5,12 +5,12 @@ A comprehensive, professional-grade testing framework for LLM AI chatbots, ML mo
 ![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)
 ![License](https://img.shields.io/badge/License-Educational-green.svg)
 ![Framework](https://img.shields.io/badge/Framework-Flask-red.svg)
-![Tests](https://img.shields.io/badge/Tests-420+-brightgreen.svg)
+![Tests](https://img.shields.io/badge/Tests-1000+-brightgreen.svg)
 
 ## 🌟 Features
 
 ### 🎯 **Comprehensive Testing**
-- **420+ Test Cases** across all major AI platforms and security frameworks
+- **1000+ Test Cases** across all major AI platforms, security frameworks, and attack vectors
 - **Multi-Provider Support**: OpenAI, Claude, Google AI Studio, Meta AI, Hugging Face, Cohere
 - **Security Validation**: Prompt injection, jailbreak resistance, content safety
 - **Performance Benchmarking**: Response times, throughput, scalability
@@ -53,9 +53,24 @@ Open your browser to: **http://localhost:5000**
 
 ### 4. **Run Your First Test**
 1. Go to **"Run Tests"**
-2. Select **"Core LLM Tests"**
+2. Select **"Advanced Security Tests"** for comprehensive evaluation
 3. Choose **"Mock Mode"** (no API keys needed)
 4. Click **"Run Tests"** and watch real-time progress!
+
+### 5. **Run Comprehensive Security Tests (Command Line)**
+```bash
+# Run all 1000+ comprehensive security tests
+python run_comprehensive_tests.py --all
+
+# Run specific test suites
+python run_comprehensive_tests.py --suites adversarial_attacks,edge_case_boundary
+
+# Run with custom model and save results
+python run_comprehensive_tests.py --model gpt-4 --output security_results.json
+
+# Quick test with reduced output
+python run_comprehensive_tests.py --suites adversarial_attacks --quiet
+```
 
 ## 📁 Project Structure
 
@@ -76,8 +91,10 @@ ai-chatbot-testing-suite/
 │   ├── api_integration_tests.py   # API integration tests
 │   ├── security_evaluation_framework.py  # Advanced security testing (120+ tests)
 │   ├── llm_security_research_framework.py # Research-based security tests (100+ tests)
+│   ├── comprehensive_security_test_suite.py # Comprehensive testing (800+ tests)
 │   ├── config.py                  # Configuration management
-│   └── run_tests.py               # Command-line test runner
+│   ├── run_tests.py               # Command-line test runner
+│   └── run_comprehensive_tests.py # Comprehensive security test runner
 ├── 🎨 Frontend Assets
 │   └── static/
 │       └── css/
@@ -172,6 +189,63 @@ ai-chatbot-testing-suite/
 - **Responsible Practices Score**: Ethical AI implementation assessment
 - **Vulnerability Breakdown**: Classification by research-defined categories
 - **Attack Vector Analysis**: Success rates by attack methodology
+
+#### **🚀 Comprehensive Attack Testing Suite** (`ComprehensiveSecurityTestSuite`)
+*1000+ Advanced Security Test Cases Across Multiple Attack Vectors*
+
+**Advanced Adversarial Attacks (200+ Tests)**
+- **Semantic Adversarial**: Synonym substitution, metaphorical attacks, emotional manipulation, authority implication
+- **Syntactic Manipulation**: Punctuation attacks, character spacing, symbol substitution, homoglyph attacks  
+- **Unicode Exploitation**: Right-to-left override, bidirectional text, zero-width characters, combining characters
+- **Encoding Manipulation**: Base64, URL, HTML, ROT13, Caesar cipher, hexadecimal, ASCII, binary, Morse code
+- **Steganographic Attacks**: Acrostic patterns, word positioning, case patterns, semantic layers, metaphorical hiding
+- **Contextual Manipulation**: Multi-turn conversation attacks, context window pollution, persona drift attacks
+- **Cross-Linguistic Attacks**: Multi-language bypass, code-switching, transliteration, false language detection
+- **Temporal Manipulation**: Time-based attacks, delayed execution, chronological pattern exploitation
+
+**Multi-Modal Security Testing (150+ Tests)**  
+- **Image-Based Attacks**: Metadata injection, steganographic text, QR code injection, adversarial OCR
+- **Audio-Based Attacks**: Hidden frequency attacks, speech synthesis bypass, audio steganography
+- **Video-Based Attacks**: Frame injection, deepfake detection bypass, temporal steganography
+- **Mixed Media Attacks**: Cross-modal injection, format confusion, multi-channel attacks
+- **File Upload Security**: Malicious file detection, format validation bypass, content type spoofing
+- **OCR Manipulation**: Character recognition bypass, font-based attacks, layout exploitation
+
+**Edge Case & Boundary Testing (200+ Tests)**
+- **Input Length Boundaries**: Empty input, minimal input, maximum length, memory exhaustion attacks
+- **Character Set Boundaries**: Null bytes, high ASCII, emoji floods, mathematical Unicode, Zalgo text
+- **Rate Limit Testing**: Rapid request attacks, distributed load testing, quota bypass attempts  
+- **Memory Exhaustion**: Resource consumption attacks, buffer overflow simulation, memory leak testing
+- **Parser Breaking**: Malformed input handling, syntax error exploitation, format confusion
+- **Error Handling**: Information disclosure through errors, exception manipulation, debug mode exploitation
+- **Timeout Manipulation**: Response delay attacks, connection timeout exploitation, async attack patterns
+- **Concurrent Requests**: Race condition testing, simultaneous attack coordination, thread safety validation
+
+**Large-Scale Stress Testing (150+ Tests)**
+- **Volume-Based Attacks**: High-frequency request flooding, batch processing abuse, throughput exhaustion
+- **Distributed Attack Simulation**: Multi-source coordinated attacks, botnet simulation, geographic distribution
+- **Resource Exhaustion**: CPU intensive attacks, memory consumption, disk space attacks, network saturation
+- **Pattern Flooding**: Repetitive pattern attacks, algorithmic complexity exploitation, cache poisoning
+- **Session Abuse**: Session hijacking, concurrent session attacks, session fixation, timeout exploitation
+- **API Abuse Simulation**: Endpoint flooding, parameter manipulation, rate limit circumvention
+
+**International & Multilingual Security (100+ Tests)**
+- **RTL Language Attacks**: Arabic/Hebrew text manipulation, bidirectional override, script mixing
+- **Ideographic Attacks**: Chinese/Japanese character exploitation, Unicode block mixing, font confusion
+- **Cultural Context Attacks**: Culture-specific social engineering, regional dialect exploitation
+- **Translation Bypass**: Machine translation manipulation, language detection bypass, encoding confusion
+
+**API & Integration Security (100+ Tests)**  
+- **Endpoint Security**: API route manipulation, method spoofing, parameter injection
+- **Authentication Attacks**: Token manipulation, session replay, credential stuffing, OAuth bypass
+- **Data Validation**: Input sanitization bypass, type confusion, schema validation attacks
+- **Integration Bypass**: Service mesh attacks, microservice exploitation, inter-service communication abuse
+
+**Real-World Attack Scenarios (100+ Tests)**
+- **Social Engineering**: Phishing simulation, authority manipulation, trust exploitation, urgency tactics
+- **Corporate Espionage**: Information gathering, competitive intelligence, trade secret extraction
+- **Identity Theft**: Personal information extraction, credential harvesting, profile reconstruction  
+- **Misinformation**: False information injection, narrative manipulation, fact distortion, propaganda tactics
 
 ### **Performance Tests** (`PerformanceScalabilityTests`)
 - ⚡ Response time benchmarks

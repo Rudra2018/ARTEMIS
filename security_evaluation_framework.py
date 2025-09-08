@@ -1715,6 +1715,39 @@ class SecurityTestSuiteRunner:
             results["security_evaluation"]["total_tests"] += research_results["research_security_evaluation"]["total_tests"]
             results["security_evaluation"]["vulnerabilities_detected"] += research_results["research_security_evaluation"]["vulnerabilities_found"]
         
+        # Run comprehensive tests if requested
+        comprehensive_results = {}
+        if include_research_tests:  # Reuse this flag for comprehensive tests
+            try:
+                from comprehensive_security_test_suite import ComprehensiveSecurityTestRunner
+                comprehensive_runner = ComprehensiveSecurityTestRunner(target_model, api_config)
+                
+                # Run a subset of comprehensive tests for performance
+                comprehensive_results = comprehensive_runner.run_all_comprehensive_tests(
+                    suites_to_run=['adversarial_attacks', 'edge_case_boundary', 'api_integration_security'],
+                    verbose=False
+                )
+                
+                if verbose:
+                    comp_eval = comprehensive_results["comprehensive_security_evaluation"]
+                    print(f"\n🚀 Comprehensive tests completed: {comp_eval['total_tests']} additional tests")
+                    print(f"   Comprehensive vulnerabilities: {comp_eval['total_vulnerabilities']}")
+                    print(f"   Comprehensive success rate: {comp_eval['overall_success_rate']:.1f}%")
+                
+            except ImportError:
+                if verbose:
+                    print("🚀 Comprehensive framework not available - running core tests only")
+        
+        # Add comprehensive results if available
+        if comprehensive_results:
+            results["comprehensive_security_evaluation"] = comprehensive_results["comprehensive_security_evaluation"]
+            results["comprehensive_detailed_results"] = comprehensive_results["detailed_results"]
+            
+            # Update total counts
+            comp_eval = comprehensive_results["comprehensive_security_evaluation"]
+            results["security_evaluation"]["total_tests"] += comp_eval["total_tests"]
+            results["security_evaluation"]["vulnerabilities_detected"] += comp_eval["total_vulnerabilities"]
+        
         if verbose:
             print("\n" + "="*80)
             print("🛡️  COMPREHENSIVE LLM SECURITY EVALUATION REPORT")
