@@ -1,0 +1,417 @@
+{% extends "base.html" %}
+
+{% block title %}Comprehensive Testing - AI Testing Suite{% endblock %}
+
+{% block content %}
+<div class="row animate-in">
+    <div class="col-12 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h1 class="mb-3">
+                            <i class="fas fa-shield-alt text-primary me-2"></i>
+                            Comprehensive Security Testing
+                        </h1>
+                        <p class="lead mb-3">
+                            Run the complete 1000+ test case security evaluation suite with adaptive learning capabilities.
+                        </p>
+                        <div class="mb-3">
+                            <span class="badge bg-danger me-2"><i class="fas fa-exclamation-triangle me-1"></i>1000+ Tests</span>
+                            <span class="badge bg-success me-2"><i class="fas fa-brain me-1"></i>Adaptive Learning</span>
+                            <span class="badge bg-info me-2"><i class="fas fa-cogs me-1"></i>Multi-Framework</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <i class="fas fa-shield-alt fa-5x text-primary opacity-25"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row animate-in">
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-cog me-2"></i>
+                    Test Configuration
+                </h5>
+            </div>
+            <div class="card-body">
+                <form id="comprehensiveTestForm">
+                    <div class="mb-3">
+                        <label class="form-label">Model Name</label>
+                        <input type="text" class="form-control" id="modelName" 
+                               value="comprehensive-test-model" placeholder="Enter model identifier">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Test Suites</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="adversarial_attacks" id="suite1" checked>
+                            <label class="form-check-label" for="suite1">
+                                Adversarial Attacks (200+ tests)
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="multi_modal_security" id="suite2" checked>
+                            <label class="form-check-label" for="suite2">
+                                Multi-Modal Security (150+ tests)
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="edge_case_boundary" id="suite3" checked>
+                            <label class="form-check-label" for="suite3">
+                                Edge Case & Boundary (200+ tests)
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="large_scale_stress" id="suite4">
+                            <label class="form-check-label" for="suite4">
+                                Large Scale Stress (150+ tests)
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="international_multilingual" id="suite5">
+                            <label class="form-check-label" for="suite5">
+                                International/Multilingual (100+ tests)
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="api_integration_security" id="suite6" checked>
+                            <label class="form-check-label" for="suite6">
+                                API Integration Security (100+ tests)
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="enableLearning" 
+                                   {% if learning_available %}checked{% else %}disabled{% endif %}>
+                            <label class="form-check-label" for="enableLearning">
+                                Enable Adaptive Learning Engine
+                                {% if not learning_available %}
+                                <small class="text-muted">(Not Available)</small>
+                                {% endif %}
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-danger btn-lg" id="startTestBtn">
+                            <i class="fas fa-play me-2"></i>Start Comprehensive Testing
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Framework Overview
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <h6><i class="fas fa-shield-alt text-primary me-2"></i>Core Security Framework</h6>
+                        <ul class="small">
+                            <li>SEI & OpenAI evaluation standards</li>
+                            <li>WDTA L1-L4 attack categorization</li>
+                            <li>CyberSecEval 2 benchmarking</li>
+                            <li>Purple Llama secure coding tests</li>
+                            <li>OWASP LLM Top 10 testing</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <h6><i class="fas fa-search text-success me-2"></i>Research Framework</h6>
+                        <ul class="small">
+                            <li>Advanced prompt injection tests</li>
+                            <li>Data poisoning & model extraction</li>
+                            <li>Privacy leakage & bias analysis</li>
+                            <li>Responsible AI practices evaluation</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <h6><i class="fas fa-cogs text-warning me-2"></i>Comprehensive Security</h6>
+                        <ul class="small">
+                            <li>800+ specialized test cases</li>
+                            <li>Multi-modal attack vectors</li>
+                            <li>International language testing</li>
+                            <li>Real-world attack scenarios</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <h6><i class="fas fa-brain text-info me-2"></i>Adaptive Learning</h6>
+                        <ul class="small">
+                            <li>Pattern recognition & analysis</li>
+                            <li>Dynamic test case generation</li>
+                            <li>ML-based vulnerability prediction</li>
+                            <li>Feedback loop optimization</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Test Execution Panel -->
+<div class="row animate-in" id="testExecution" style="display: none;">
+    <div class="col-12 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-play me-2"></i>
+                    Test Execution
+                    <span class="badge bg-primary ms-2" id="testStatus">Running</span>
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <div class="h4" id="totalTests">0</div>
+                            <small class="text-muted">Total Tests</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <div class="h4" id="completedTests">0</div>
+                            <small class="text-muted">Completed</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <div class="h4 text-danger" id="vulnerabilities">0</div>
+                            <small class="text-muted">Vulnerabilities</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <div class="h4" id="successRate">0%</div>
+                            <small class="text-muted">Success Rate</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="progress mb-3">
+                    <div class="progress-bar" role="progressbar" style="width: 0%" id="testProgress">0%</div>
+                </div>
+                
+                <div class="test-log p-3" id="testLog">
+                    <div>Starting comprehensive security testing...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Results Panel -->
+<div class="row animate-in" id="resultsPanel" style="display: none;">
+    <div class="col-12 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-bar me-2"></i>
+                    Test Results
+                </h5>
+            </div>
+            <div class="card-body">
+                <div id="resultsContent">
+                    <!-- Results will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let currentTestId = null;
+
+// Form submission
+document.getElementById('comprehensiveTestForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    startComprehensiveTest();
+});
+
+function startComprehensiveTest() {
+    const modelName = document.getElementById('modelName').value;
+    const enableLearning = document.getElementById('enableLearning').checked;
+    
+    // Get selected test suites
+    const testSuites = [];
+    document.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+        if (checkbox.value && checkbox.id !== 'enableLearning') {
+            testSuites.push(checkbox.value);
+        }
+    });
+    
+    if (testSuites.length === 0) {
+        alert('Please select at least one test suite');
+        return;
+    }
+    
+    // Show execution panel
+    document.getElementById('testExecution').style.display = 'block';
+    document.getElementById('resultsPanel').style.display = 'none';
+    
+    // Disable form
+    document.getElementById('startTestBtn').disabled = true;
+    document.getElementById('startTestBtn').innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Running Tests...';
+    
+    // Start test
+    fetch('/api/comprehensive/start', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            model_name: modelName,
+            test_suites: testSuites,
+            enable_learning: enableLearning
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        currentTestId = data.test_id;
+        pollTestStatus();
+    })
+    .catch(error => {
+        console.error('Error starting test:', error);
+        resetForm();
+    });
+}
+
+function pollTestStatus() {
+    if (!currentTestId) return;
+    
+    fetch(`/api/test/status/${currentTestId}`)
+        .then(response => response.json())
+        .then(data => {
+            updateTestProgress(data);
+            
+            if (data.status === 'completed') {
+                fetchTestResults();
+            } else if (data.status === 'failed') {
+                handleTestFailure(data.error);
+            } else {
+                setTimeout(pollTestStatus, 2000); // Poll every 2 seconds
+            }
+        });
+}
+
+function updateTestProgress(data) {
+    const progress = data.progress || 0;
+    document.getElementById('testProgress').style.width = progress + '%';
+    document.getElementById('testProgress').textContent = Math.round(progress) + '%';
+    
+    if (data.total_tests) {
+        document.getElementById('totalTests').textContent = data.total_tests;
+    }
+    if (data.completed_tests !== undefined) {
+        document.getElementById('completedTests').textContent = data.completed_tests;
+    }
+    if (data.vulnerabilities_found !== undefined) {
+        document.getElementById('vulnerabilities').textContent = data.vulnerabilities_found;
+    }
+    
+    // Update success rate
+    if (data.total_tests && data.completed_tests) {
+        const successRate = ((data.completed_tests - (data.vulnerabilities_found || 0)) / data.completed_tests * 100);
+        document.getElementById('successRate').textContent = Math.round(successRate) + '%';
+    }
+}
+
+function fetchTestResults() {
+    fetch(`/api/test/results/${currentTestId}`)
+        .then(response => response.json())
+        .then(data => {
+            displayResults(data);
+            resetForm();
+        });
+}
+
+function displayResults(results) {
+    document.getElementById('testStatus').textContent = 'Completed';
+    document.getElementById('testStatus').className = 'badge bg-success ms-2';
+    
+    // Show results panel
+    document.getElementById('resultsPanel').style.display = 'block';
+    
+    // Format and display results
+    let resultsHtml = '<div class="row">';
+    
+    if (results.ultimate_security_evaluation) {
+        const eval = results.ultimate_security_evaluation;
+        resultsHtml += `
+            <div class="col-md-6 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h6>Overall Results</h6>
+                        <p>Total Tests: <strong>${eval.total_tests_executed}</strong></p>
+                        <p>Vulnerabilities Found: <strong class="text-danger">${eval.total_vulnerabilities_found}</strong></p>
+                        <p>Success Rate: <strong>${eval.overall_success_rate.toFixed(1)}%</strong></p>
+                        <p>Execution Time: <strong>${eval.total_execution_time.toFixed(2)}s</strong></p>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    if (results.adaptive_learning && results.adaptive_learning.processed_results) {
+        const learning = results.adaptive_learning;
+        resultsHtml += `
+            <div class="col-md-6 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h6><i class="fas fa-brain me-2"></i>Adaptive Learning</h6>
+                        <p>Results Processed: <strong>${learning.processed_results}</strong></p>
+                        <p>New Patterns: <strong>${learning.new_patterns_discovered}</strong></p>
+                        <p>Generated Tests: <strong>${learning.tests_generated}</strong></p>
+                        <p>Learning Mode: <strong>${learning.learning_mode}</strong></p>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    resultsHtml += '</div>';
+    
+    // Add download button
+    resultsHtml += `
+        <div class="text-center mt-3">
+            <a href="/api/results/download/${currentTestId}/json" class="btn btn-primary me-2">
+                <i class="fas fa-download me-2"></i>Download Results (JSON)
+            </a>
+            <a href="/results/${currentTestId}" class="btn btn-outline-primary">
+                <i class="fas fa-eye me-2"></i>View Details
+            </a>
+        </div>
+    `;
+    
+    document.getElementById('resultsContent').innerHTML = resultsHtml;
+}
+
+function handleTestFailure(error) {
+    document.getElementById('testStatus').textContent = 'Failed';
+    document.getElementById('testStatus').className = 'badge bg-danger ms-2';
+    
+    document.getElementById('testLog').innerHTML += `<div class="text-danger">Error: ${error}</div>`;
+    resetForm();
+}
+
+function resetForm() {
+    document.getElementById('startTestBtn').disabled = false;
+    document.getElementById('startTestBtn').innerHTML = '<i class="fas fa-play me-2"></i>Start Comprehensive Testing';
+}
+</script>
+{% endblock %}

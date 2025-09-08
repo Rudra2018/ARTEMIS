@@ -1,34 +1,43 @@
 # 🤖 AI Chatbot Testing Suite
 
-A comprehensive, professional-grade testing framework for LLM AI chatbots, ML models, and AI platform integrations. Features a modern web interface, real-time monitoring, security testing, performance benchmarking, and detailed analytics.
+An advanced, professional-grade testing framework for LLM AI chatbots with **1000+ test cases**, **adaptive learning engine**, and comprehensive security evaluation. Features modern web interface, real-time monitoring, multi-framework security testing, and intelligent learning capabilities.
 
 ![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)
 ![License](https://img.shields.io/badge/License-Educational-green.svg)
 ![Framework](https://img.shields.io/badge/Framework-Flask-red.svg)
 ![Tests](https://img.shields.io/badge/Tests-1000+-brightgreen.svg)
+![Security](https://img.shields.io/badge/Security-Multi_Framework-red.svg)
+![AI](https://img.shields.io/badge/AI-Adaptive_Learning-purple.svg)
 
 ## 🌟 Features
 
-### 🎯 **Comprehensive Testing**
-- **1000+ Test Cases** across all major AI platforms, security frameworks, and attack vectors
-- **Multi-Provider Support**: OpenAI, Claude, Google AI Studio, Meta AI, Hugging Face, Cohere
-- **Security Validation**: Prompt injection, jailbreak resistance, content safety
-- **Performance Benchmarking**: Response times, throughput, scalability
-- **Edge Case Testing**: Unicode, malformed inputs, network interruptions
+### 🧠 **Adaptive Learning Engine** ⭐ *NEW*
+- **Pattern Recognition**: Analyzes attack vectors and response patterns using ML techniques
+- **Dynamic Test Generation**: Creates new test cases based on discovered vulnerabilities
+- **ML-based Prediction**: Predicts vulnerability likelihood using intelligent classifiers
+- **Feedback Optimization**: Continuously improves testing strategies based on results
+- **Persistent Learning**: SQLite database stores learning insights across sessions
+
+### 🎯 **Comprehensive Security Testing**
+- **1000+ Test Cases** across multiple security frameworks and attack methodologies
+- **Core Security Framework** (120+ tests): SEI & OpenAI, WDTA L1-L4, CyberSecEval 2, Purple Llama, Garak, OWASP LLM Top 10
+- **Research Security Framework** (100+ tests): Advanced prompt injection, data poisoning, privacy bias analysis
+- **Comprehensive Security Framework** (800+ tests): Adversarial attacks, multi-modal security, edge cases, stress testing
+- **Multi-Provider Support**: OpenAI, Claude, Google AI Studio, Meta AI, Hugging Face, Cohere, Azure OpenAI
 
 ### 🌐 **Modern Web Interface**
-- **Real-time Dashboard** with live progress monitoring
-- **Interactive Test Execution** with WebSocket updates
-- **Visual Analytics** with charts and graphs
-- **Professional Reports** (JSON, HTML, JUnit XML)
-- **Responsive Design** for all devices
+- **Real-time Dashboard** with adaptive learning metrics and live progress monitoring
+- **Comprehensive Testing Page** with 1000+ test suite configuration
+- **Interactive Test Execution** with WebSocket updates and detailed progress tracking
+- **Visual Analytics** with security metrics, learning insights, and vulnerability reports
+- **Professional Reports** (JSON, HTML, JUnit XML) with learning summaries
 
 ### 🔒 **Security & Safety**
-- **Mock Mode** for safe testing without API costs
-- **Secure API key management**
-- **Rate limit compliance**
-- **Content filtering validation**
-- **Information leakage prevention**
+- **Mock Mode** for safe testing without API costs or external dependencies
+- **Secure API key management** with environment variable support
+- **Rate limit compliance** and intelligent request throttling
+- **Content filtering validation** and safety measure testing
+- **Information leakage prevention** and data privacy protection
 
 ## 🚀 Quick Start
 
@@ -51,25 +60,34 @@ python web_app.py
 ### 3. **Access the Interface**
 Open your browser to: **http://localhost:5000**
 
-### 4. **Run Your First Test**
-1. Go to **"Run Tests"**
-2. Select **"Advanced Security Tests"** for comprehensive evaluation
-3. Choose **"Mock Mode"** (no API keys needed)
-4. Click **"Run Tests"** and watch real-time progress!
+### 4. **Run Your First Comprehensive Test** ⭐ *Recommended*
+1. Go to **"Comprehensive"** in the navigation
+2. Select desired test suites (default: 650+ tests)
+3. Enable **"Adaptive Learning Engine"** for intelligent testing
+4. Click **"Start Comprehensive Testing"** and monitor real-time progress!
 
-### 5. **Run Comprehensive Security Tests (Command Line)**
+### 5. **Run Basic Tests**
+1. Go to **"Basic Tests"**  
+2. Select **"Advanced Security Tests"** for standard evaluation
+3. Choose **"Mock Mode"** (no API keys needed)
+4. Click **"Run Tests"** and watch progress!
+
+### 6. **Command Line Interface**
 ```bash
-# Run all 1000+ comprehensive security tests
+# Run all 1000+ comprehensive security tests with adaptive learning
 python run_comprehensive_tests.py --all
 
-# Run specific test suites
-python run_comprehensive_tests.py --suites adversarial_attacks,edge_case_boundary
+# Run specific test suites with learning disabled
+python run_comprehensive_tests.py --suites adversarial_attacks,edge_case_boundary --no-learning
 
 # Run with custom model and save results
 python run_comprehensive_tests.py --model gpt-4 --output security_results.json
 
 # Quick test with reduced output
 python run_comprehensive_tests.py --suites adversarial_attacks --quiet
+
+# List available test suites
+python run_comprehensive_tests.py --list-suites
 ```
 
 ## 📁 Project Structure
@@ -80,8 +98,9 @@ ai-chatbot-testing-suite/
 │   ├── web_app.py              # Main Flask application with WebSocket
 │   ├── launch_ui.py            # Easy launcher with auto-setup
 │   └── templates/              # HTML templates
-│       ├── dashboard.html      # Main dashboard with metrics
-│       ├── test.html          # Test execution interface
+│       ├── dashboard.html      # Main dashboard with adaptive learning metrics
+│       ├── comprehensive.html  # ⭐ Comprehensive testing with 1000+ tests
+│       ├── test.html          # Basic test execution interface
 │       ├── results.html       # Analytics and reporting
 │       ├── config.html        # API configuration management
 │       ├── docs.html          # Built-in documentation
@@ -92,9 +111,10 @@ ai-chatbot-testing-suite/
 │   ├── security_evaluation_framework.py  # Advanced security testing (120+ tests)
 │   ├── llm_security_research_framework.py # Research-based security tests (100+ tests)
 │   ├── comprehensive_security_test_suite.py # Comprehensive testing (800+ tests)
+│   ├── adaptive_learning_engine.py # ⭐ Adaptive learning engine with ML capabilities
 │   ├── config.py                  # Configuration management
 │   ├── run_tests.py               # Command-line test runner
-│   └── run_comprehensive_tests.py # Comprehensive security test runner
+│   └── run_comprehensive_tests.py # Comprehensive security test runner with learning
 ├── 🎨 Frontend Assets
 │   └── static/
 │       └── css/

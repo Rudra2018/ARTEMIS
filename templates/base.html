@@ -182,6 +182,27 @@
                 opacity: 1;
             }
         }
+
+        .metric-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .badge {
+            font-size: 0.75rem;
+        }
+
+        .card-header {
+            background-color: rgba(var(--bs-primary-rgb), 0.1);
+            border-bottom: 1px solid rgba(var(--bs-primary-rgb), 0.2);
+        }
     </style>
 </head>
 
@@ -207,7 +228,12 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('test_page') }}">
-                            <i class="fas fa-play me-1"></i>Run Tests
+                            <i class="fas fa-play me-1"></i>Basic Tests
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('comprehensive_test_page') }}">
+                            <i class="fas fa-shield-alt me-1"></i>Comprehensive
                         </a>
                     </li>
                     <li class="nav-item">

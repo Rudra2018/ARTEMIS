@@ -15,12 +15,20 @@
                             AI Chatbot Testing Suite
                         </h1>
                         <p class="lead mb-3">
-                            Comprehensive testing platform for LLM AI chatbots, ML models, and AI platforms 
-                            including OpenAI, Claude, Google AI Studio, Meta AI, and more.
+                            Advanced testing platform with <strong>1000+ test cases</strong> for LLM security evaluation.
+                            Features adaptive learning engine, comprehensive security frameworks, and multi-provider support.
                         </p>
+                        <div class="mb-3">
+                            <span class="badge bg-success me-2"><i class="fas fa-brain me-1"></i>Adaptive Learning</span>
+                            <span class="badge bg-info me-2"><i class="fas fa-shield-alt me-1"></i>1000+ Tests</span>
+                            <span class="badge bg-warning me-2"><i class="fas fa-search me-1"></i>Security Analysis</span>
+                        </div>
                         <div class="d-flex gap-2">
+                            <a href="{{ url_for('comprehensive_test_page') }}" class="btn btn-danger">
+                                <i class="fas fa-shield-alt me-2"></i>Comprehensive Testing
+                            </a>
                             <a href="{{ url_for('test_page') }}" class="btn btn-primary">
-                                <i class="fas fa-play me-2"></i>Start Testing
+                                <i class="fas fa-play me-2"></i>Basic Testing
                             </a>
                             <a href="{{ url_for('config_page') }}" class="btn btn-outline-secondary">
                                 <i class="fas fa-cog me-2"></i>Configure APIs
@@ -78,9 +86,57 @@
     <div class="col-md-3 mb-4">
         <div class="card metric-card-4">
             <div class="card-body text-center">
-                <i class="fas fa-clock fa-2x mb-3"></i>
-                <h4 class="mb-1" id="runningTests">0</h4>
-                <small>Tests Running</small>
+                <i class="fas fa-brain fa-2x mb-3"></i>
+                <h4 class="mb-1" id="learningEngine">
+                    <span class="text-success">Active</span>
+                </h4>
+                <small>Adaptive Learning</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Adaptive Learning Overview -->
+<div class="row animate-in">
+    <div class="col-12 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-brain me-2"></i>
+                    Adaptive Learning Engine
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 text-center">
+                        <div class="metric-circle bg-primary">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <h6 class="mt-2">Pattern Recognition</h6>
+                        <p class="small text-muted">Analyzes attack vectors and response patterns</p>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <div class="metric-circle bg-success">
+                            <i class="fas fa-cogs"></i>
+                        </div>
+                        <h6 class="mt-2">Dynamic Generation</h6>
+                        <p class="small text-muted">Creates adaptive test cases</p>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <div class="metric-circle bg-warning">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <h6 class="mt-2">ML Prediction</h6>
+                        <p class="small text-muted">Predicts vulnerability likelihood</p>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <div class="metric-circle bg-info">
+                            <i class="fas fa-sync-alt"></i>
+                        </div>
+                        <h6 class="mt-2">Feedback Optimization</h6>
+                        <p class="small text-muted">Improves strategy effectiveness</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

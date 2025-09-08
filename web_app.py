@@ -27,10 +27,19 @@ from api_integration_tests import APIIntegrationTestRunner
 from run_tests import generate_reports
 try:
     from security_evaluation_framework import SecurityTestSuiteRunner
+    from comprehensive_security_test_suite import ComprehensiveSecurityTestRunner
+    from adaptive_learning_engine import AdaptiveLearningEngine
     SECURITY_FRAMEWORK_AVAILABLE = True
-except ImportError:
+    COMPREHENSIVE_FRAMEWORK_AVAILABLE = True
+    ADAPTIVE_LEARNING_AVAILABLE = True
+except ImportError as e:
+    logger.warning(f"Some frameworks not available: {e}")
     SECURITY_FRAMEWORK_AVAILABLE = False
+    COMPREHENSIVE_FRAMEWORK_AVAILABLE = False
+    ADAPTIVE_LEARNING_AVAILABLE = False
     SecurityTestSuiteRunner = None
+    ComprehensiveSecurityTestRunner = None
+    AdaptiveLearningEngine = None
 
 # Flask app setup
 app = Flask(__name__)
@@ -292,6 +301,102 @@ def test_page():
     return render_template('test.html', 
                          providers=providers,
                          available_providers=available_providers)
+
+@app.route('/comprehensive')
+def comprehensive_test_page():
+    """Comprehensive testing page with 1000+ tests and adaptive learning"""
+    return render_template('comprehensive.html', 
+                         config_manager=config_manager,
+                         security_available=SECURITY_FRAMEWORK_AVAILABLE,
+                         comprehensive_available=COMPREHENSIVE_FRAMEWORK_AVAILABLE,
+                         learning_available=ADAPTIVE_LEARNING_AVAILABLE)
+
+@app.route('/api/comprehensive/start', methods=['POST'])
+def start_comprehensive_test():
+    """Start comprehensive security test with 1000+ test cases"""
+    test_id = str(uuid.uuid4())
+    data = request.get_json()
+    
+    # Test configuration
+    model_name = data.get('model_name', 'comprehensive-test-model')
+    test_suites = data.get('test_suites', [
+        'adversarial_attacks', 'multi_modal_security', 'edge_case_boundary',
+        'large_scale_stress', 'international_multilingual', 'api_integration_security'
+    ])
+    enable_learning = data.get('enable_learning', True)
+    
+    # Initialize test tracking
+    active_tests[test_id] = {
+        'start_time': datetime.now(),
+        'status': 'running',
+        'progress': 0,
+        'total_tests': 0,
+        'completed_tests': 0,
+        'vulnerabilities_found': 0
+    }
+    
+    test_results_cache[test_id] = {
+        'test_id': test_id,
+        'start_time': datetime.now().isoformat(),
+        'status': 'running',
+        'config': {
+            'model_name': model_name,
+            'test_suites': test_suites,
+            'enable_learning': enable_learning
+        }
+    }
+    
+    # Start comprehensive test in background
+    def run_comprehensive_test():
+        try:
+            from run_comprehensive_tests import run_all_security_tests
+            
+            # Run the comprehensive test suite
+            results = run_all_security_tests(
+                model_name=model_name,
+                suites=test_suites,
+                verbose=False,
+                enable_learning=enable_learning
+            )
+            
+            # Update results
+            active_tests[test_id]['status'] = 'completed'
+            active_tests[test_id]['progress'] = 100
+            
+            test_results_cache[test_id].update({
+                'status': 'completed',
+                'end_time': datetime.now().isoformat(),
+                'results': results
+            })
+            
+            # Emit completion event
+            socketio.emit('test_completed', {
+                'test_id': test_id,
+                'results': results
+            })
+            
+        except Exception as e:
+            logger.error(f"Comprehensive test failed: {str(e)}")
+            active_tests[test_id]['status'] = 'failed'
+            active_tests[test_id]['error'] = str(e)
+            
+            test_results_cache[test_id].update({
+                'status': 'failed',
+                'end_time': datetime.now().isoformat(),
+                'error': str(e)
+            })
+            
+            socketio.emit('test_failed', {
+                'test_id': test_id,
+                'error': str(e)
+            })
+    
+    # Start background thread
+    thread = threading.Thread(target=run_comprehensive_test)
+    thread.daemon = True
+    thread.start()
+    
+    return jsonify({'test_id': test_id, 'status': 'started'})
 
 @app.route('/api/test/start', methods=['POST'])
 def start_test():
