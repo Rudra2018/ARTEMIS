@@ -172,3 +172,33 @@ private/
 *_poc.py
 *demo*.py
 *.test.py
+
+# Generated reports and documentation
+*.pdf
+*_report_*.json
+*_security_*.json
+*SECURITY_*.md
+*_SECURITY_*.md
+DELIVERY_SUMMARY.md
+EXECUTIVE_*.md
+POC_SUMMARY.md
+
+# Security testing output
+halodoc_*.py
+halodoc_*.json
+halodoc_*.log
+hai_*.py
+hai_*.json
+llama4_*.py
+academic_*.py
+ai_bug_bounty_*.py
+
+# Temporary testing files
+security_audit.log
+*.tmp.py
+test_*.py
+
+# Virtual environments
+venv/
+env/
+.venv/
