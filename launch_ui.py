@@ -40,7 +40,7 @@ def check_dependencies():
         try:
             subprocess.check_call([
                 sys.executable, '-m', 'pip', 'install', 
-                '--upgrade', '--user'
+                '--upgrade'
             ] + missing_packages)
             print("✅ Dependencies installed successfully!")
         except subprocess.CalledProcessError as e:

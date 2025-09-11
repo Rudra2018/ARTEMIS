@@ -165,3 +165,10 @@ secrets.yaml
 cached_results/
 user_configs/
 private/
+
+# Test results and demo files
+*test_results*.json
+*assessment*.json
+*_poc.py
+*demo*.py
+*.test.py
