@@ -161,6 +161,24 @@ secrets.yaml
 *.backup
 *~
 
+# AI Models and ML Data
+models/
+*.bin
+*.safetensors
+*.onnx
+model_cache/
+.models_cache/
+ml_data/
+training_data/
+
+# Security Agent Sessions
+security_sessions/
+agent_logs/
+fuzzing_results/
+threat_models/
+compliance_reports/
+scan_results/
+
 # Custom directories for this project
 cached_results/
 user_configs/
@@ -192,6 +210,12 @@ hai_*.json
 llama4_*.py
 academic_*.py
 ai_bug_bounty_*.py
+
+# Agent-specific files
+fuzzing_sessions/
+threat_modeling_sessions/
+compliance_sessions/
+sca_sessions/
 
 # Temporary testing files
 security_audit.log

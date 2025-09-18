@@ -1,41 +1,48 @@
 # 🔒 AI Chatbot Security Testing Suite
 
-A comprehensive security testing framework for AI chatbots and MCP (Model Context Protocol) systems, featuring multi-agent security assessment capabilities.
+A comprehensive, state-of-the-art security testing framework for AI chatbots and LLM systems, featuring advanced adversarial testing, predictive analytics, and modular AI security agents.
 
 ## 🎯 Overview
 
-This repository contains a professional-grade security testing framework designed to assess AI chatbot systems, with specialized focus on:
+This repository contains a professional-grade security testing framework designed to assess AI chatbot systems with cutting-edge capabilities:
 
-- **Multi-Agent Security Testing** - Automated security assessment using specialized agents
-- **AI-Specific Vulnerabilities** - Prompt injection, AI manipulation, and context attacks  
-- **Traditional Web Security** - SQL injection, XSS, authentication bypass
-- **MCP Protocol Security** - Model Context Protocol specific security testing
-- **Comprehensive Reporting** - Executive and technical reports with actionable insights
+- **🤖 Modular AI Security Agents** - Independent microservices for specialized security testing
+- **🧠 Advanced Adversarial Testing** - Arcanum Prompt Injection Taxonomy & CL4R1T4S techniques
+- **🔮 Predictive Analytics** - LSTM/GRU models for threat prediction and risk assessment
+- **📊 Continuous Learning** - Self-improving AI with feedback loops and adaptation
+- **🎯 Intelligent Orchestration** - Smart coordination of security testing operations
+- **📋 Compliance Framework** - GDPR, PCI-DSS, HIPAA, SOX, ISO 27001/27002 automated checking
 
 ## 🏗️ Repository Structure
 
 ```
 ai-chatbot-security-tester/
-├── 📁 frameworks/              # Core security testing frameworks
-│   ├── security_evaluation_framework.py
-│   ├── llm_security_research_framework.py
-│   └── adaptive_learning_engine.py
-├── 📁 security_modules/        # Security components and configurations
-│   ├── config.py
-│   └── web_app.py
-├── 📁 testing_tools/          # Security testing utilities
-│   ├── api_integration_tests.py
-│   ├── run_comprehensive_tests.py
-│   └── run_tests.py
-├── 📁 documentation/          # Documentation and guides
-│   └── README.md
-├── 📁 templates/              # Web UI templates
-├── 📁 static/                 # Static web assets
-├── 📁 ai_tester_core/         # Core testing engine
-├── 📁 ml_models/              # Machine learning components
-├── 📁 scripts/                # Utility scripts
-├── 📁 examples/               # Usage examples
-└── launch_ui.py               # Main application launcher
+├── 📁 security_modules/agents/          # Modular AI Security Agents
+│   ├── ai_fuzzing_agent/               # Intelligent Fuzzing & Payload Generation
+│   ├── threat_modeling_agent/          # STRIDE-based Threat Modeling
+│   ├── compliance_agent/               # Regulatory Compliance Assessment
+│   ├── sca_agent/                      # Software Composition Analysis
+│   ├── enhanced_orchestrator.py        # Agent Coordination & Risk Synthesis
+│   └── agent_coordinator.py            # Task Distribution & Result Aggregation
+├── 📁 security_modules/adversarial_testing/  # Advanced Adversarial Frameworks
+│   ├── arcanum_taxonomy.py             # Arcanum Prompt Injection Taxonomy
+│   ├── claritas_techniques.py          # CL4R1T4S LLM Adversarial Techniques
+│   └── advanced_framework.py           # Unified Adversarial Testing Engine
+├── 📁 ai_tester_core/                  # Core AI Security Engine
+│   ├── advanced_analysis/              # AI-Powered Analysis Components
+│   │   └── ai_security_analyzer.py     # Transformer-based Pattern Recognition
+│   └── continuous_learning/            # Self-Learning Systems
+│       └── continuous_learner.py       # Adaptive Learning Engine
+├── 📁 ml_models/                       # Machine Learning Models
+│   ├── predictive_analytics/           # Threat Prediction & Risk Assessment
+│   │   └── threat_predictor.py         # LSTM/GRU Ensemble Models
+│   └── neural_networks/                # Deep Learning Components
+├── 📁 frameworks/                      # Legacy Security Frameworks
+├── 📁 testing_tools/                   # Security Testing Utilities
+├── 📁 templates/                       # Web UI Templates
+├── 📁 static/                          # Static Web Assets
+├── 📁 dashboards/                      # Security Dashboards
+└── launch_ui.py                        # Main Application Launcher
 ```
 
 ## 🚀 Quick Start
@@ -45,6 +52,7 @@ ai-chatbot-security-tester/
 - Python 3.8+
 - pip package manager
 - Git (for repository management)
+- Virtual environment (recommended)
 
 ### Installation
 
@@ -54,52 +62,129 @@ ai-chatbot-security-tester/
    cd ai-chatbot-security-tester
    ```
 
-2. **Install dependencies:**
+2. **Set up virtual environment:**
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+
+3. **Install dependencies:**
    ```bash
    pip install -r requirements.txt
    ```
 
-3. **Launch the application:**
-   ```bash
-   python launch_ui.py
-   ```
+### Usage Options
 
-4. **Access the web interface:**
-   ```
-   http://localhost:5001
-   ```
+#### **Option 1: Web Interface (Legacy)**
+```bash
+python launch_ui.py
+# Access at: http://localhost:5001
+```
 
-## 🛡️ Security Testing Capabilities
+#### **Option 2: Modular AI Agents (Recommended)**
 
-### **Multi-Agent Security Framework**
+**Start Individual Agents:**
+```bash
+# AI Fuzzing Agent
+cd security_modules/agents/ai_fuzzing_agent
+python api.py  # Port 8001
 
-Our advanced testing framework employs specialized security agents:
+# Threat Modeling Agent
+cd security_modules/agents/threat_modeling_agent
+python api.py  # Port 8002
 
-- **🔍 ReconAgent** - System discovery and reconnaissance
-- **🔐 AuthAgent** - Authentication and session security
-- **✅ InputValidationAgent** - Injection attack testing
-- **🤖 PromptSecurityAgent** - AI-specific security testing
-- **🔑 AuthorizationAgent** - Access control validation
-- **🛡️ DetectionDefenseAgent** - Security controls assessment
+# Compliance Agent
+cd security_modules/agents/compliance_agent
+python api.py  # Port 8003
 
-### **Vulnerability Coverage**
+# SCA Agent
+cd security_modules/agents/sca_agent
+python api.py  # Port 8004
+```
 
-- ✅ **SQL Injection** - Database security testing
-- ✅ **Cross-Site Scripting (XSS)** - Client-side attack vectors
-- ✅ **Command Injection** - System command execution
-- ✅ **Prompt Injection** - AI manipulation attacks
-- ✅ **Authentication Bypass** - Access control testing
-- ✅ **Session Management** - Session security validation
-- ✅ **Input Validation** - Data sanitization testing
-- ✅ **Authorization Bypass** - Privilege escalation testing
+**API Documentation:**
+- AI Fuzzing: http://localhost:8001/docs
+- Threat Modeling: http://localhost:8002/docs
+- Compliance: http://localhost:8003/docs
+- SCA: http://localhost:8004/docs
 
-### **AI-Specific Security Testing**
+## 🛡️ Advanced Security Testing Capabilities
 
-- **Prompt Injection Detection** - Direct and indirect manipulation
-- **Context Poisoning** - Conversation context attacks
-- **AI Safety Boundaries** - System prompt extraction attempts
-- **Model Manipulation** - Behavior modification testing
-- **Tool Access Control** - MCP tool permission validation
+### **🤖 Modular AI Security Agents** (FastAPI Microservices)
+
+Our next-generation framework features independent AI security agents:
+
+#### **🎯 AI Fuzzing Agent** (Port 8001)
+- **Semantic Fuzzing** - Transformer-based intelligent payload generation
+- **7 Fuzzing Strategies** - Semantic, random, mutation, grammar-based, adversarial, boundary, coverage-guided
+- **Vulnerability Detection** - Real-time classification and severity assessment
+- **API Endpoints**: `/fuzz`, `/status/{session_id}`, `/strategies`
+
+#### **🔍 Threat Modeling Agent** (Port 8002)
+- **STRIDE Methodology** - Comprehensive threat analysis framework
+- **Attack Path Discovery** - Graph neural networks for multi-step attack identification
+- **Risk Assessment** - Automated threat prioritization and impact analysis
+- **API Endpoints**: `/model`, `/status/{session_id}`, `/methodologies`
+
+#### **📋 Compliance Agent** (Port 8003)
+- **Multi-Framework Support** - GDPR, PCI-DSS, HIPAA, SOX, ISO 27001/27002
+- **AI-Powered Policy Analysis** - Intelligent control mapping and gap analysis
+- **Real-time Monitoring** - Continuous compliance assessment
+- **API Endpoints**: `/assess`, `/frameworks`, `/report/{session_id}`
+
+#### **🔍 Software Composition Analysis Agent** (Port 8004)
+- **Multi-Package Manager Support** - npm, pip, maven, gradle, composer, go
+- **CVE Detection** - Real-time vulnerability database integration
+- **SBOM Generation** - CycloneDX and SPDX format support
+- **License Compliance** - Automated risk assessment and policy enforcement
+- **API Endpoints**: `/scan`, `/sbom/{scan_id}`, `/vulnerabilities/{component}`
+
+### **🧠 Advanced AI Security Techniques**
+
+#### **Arcanum Prompt Injection Taxonomy**
+- **39+ Attack Vectors** - Comprehensive categorization of prompt injection techniques
+- **Intent Classification** - Malicious intent detection and categorization
+- **Evasion Techniques** - Advanced bypass methods and obfuscation
+- **Confidence Scoring** - ML-based attack success probability
+
+#### **CL4R1T4S LLM Adversarial Framework**
+- **Jailbreaking Techniques** - System boundary circumvention
+- **Context Manipulation** - Conversation hijacking and state corruption
+- **Behavioral Exploitation** - Model behavior modification attacks
+- **Chain-of-Thought Attacks** - Reasoning process manipulation
+
+### **🔮 Predictive Analytics & ML Models**
+
+#### **LSTM/GRU Threat Prediction**
+- **Temporal Pattern Recognition** - Time-series attack pattern analysis
+- **Risk Forecasting** - Proactive threat identification
+- **Ensemble Models** - Multiple neural network architectures
+- **Real-time Adaptation** - Dynamic model updates based on new threats
+
+#### **Continuous Learning Engine**
+- **Feedback Loops** - Self-improving detection algorithms
+- **Strategy Optimization** - Automated testing approach refinement
+- **Pattern Discovery** - Unsupervised learning for new attack vectors
+- **Performance Monitoring** - Continuous effectiveness assessment
+
+### **🎯 Intelligent Orchestration**
+
+#### **Enhanced Security Agent Orchestrator**
+- **Smart Task Distribution** - AI-driven workload optimization
+- **Risk Synthesis** - Cross-agent result correlation and analysis
+- **Parallel Execution** - Concurrent multi-agent operations
+- **Resource Management** - Dynamic scaling and load balancing
+
+### **📊 Comprehensive Vulnerability Coverage**
+
+- ✅ **Prompt Injection** - Direct, indirect, and context-based attacks
+- ✅ **Adversarial Inputs** - AI model manipulation and bypass techniques
+- ✅ **Traditional Web Attacks** - SQL injection, XSS, CSRF, authentication bypass
+- ✅ **API Security** - REST/GraphQL security testing and validation
+- ✅ **Dependency Vulnerabilities** - Third-party component risk assessment
+- ✅ **Compliance Violations** - Regulatory framework gap analysis
+- ✅ **Supply Chain Attacks** - Software composition security analysis
+- ✅ **Configuration Issues** - Security misconfiguration detection
 
 ## 🎯 Use Cases
 
