@@ -226,3 +226,31 @@ test_*.py
 venv/
 env/
 .venv/
+
+# Ultimate LLM Security Assessment Files
+ultimate_*
+*ultimate*
+fast_superior_*
+superior_*
+*_results_*
+*_assessment_*
+
+# Organized directories (generated content)
+reports/
+logs/
+temp/
+artifacts/
+screenshots/
+evidence/
+
+# Configuration files with sensitive data
+configs/
+*.yaml
+*.yml
+*.config
+*.ini
+
+# Security assessment outputs
+*jailbreak*
+*prompt_injection*
+*llm_security*
