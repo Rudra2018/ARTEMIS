@@ -52,7 +52,7 @@ class AdaptiveLearningEngine:
     to improve agent performance and selection
     """
 
-    def __init__(self, models_path: str, learning_data_path: str):
+    def __init__(self, models_path: str = "ml_models/nexus_learning", learning_data_path: str = "data/learning_data"):
         self.models_path = Path(models_path)
         self.learning_data_path = Path(learning_data_path)
         self.models_path.mkdir(parents=True, exist_ok=True)

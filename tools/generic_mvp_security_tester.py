@@ -518,10 +518,279 @@ class GenericMVPSecurityTester:
         if output_file.endswith('.json'):
             with open(output_file, 'w') as f:
                 json.dump(report, f, indent=2, default=str)
+        elif output_file.endswith('.pdf'):
+            await self._generate_pdf_report(report, output_file)
+        elif output_file.endswith('.html'):
+            await self._generate_html_report(report, output_file)
         else:
             # Default to JSON
             with open(output_file + '.json', 'w') as f:
                 json.dump(report, f, indent=2, default=str)
+
+    async def _generate_pdf_report(self, report: Dict[str, Any], output_file: str):
+        """Generate PDF report using ReportLab"""
+        try:
+            from reportlab.lib.pagesizes import letter, A4
+            from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+            from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+            from reportlab.lib import colors
+            from reportlab.lib.units import inch
+
+            # Create document
+            doc = SimpleDocTemplate(output_file, pagesize=A4)
+            styles = getSampleStyleSheet()
+            story = []
+
+            # Title
+            title_style = ParagraphStyle(
+                'CustomTitle',
+                parent=styles['Heading1'],
+                fontSize=18,
+                spaceAfter=30,
+                textColor=colors.darkblue
+            )
+
+            story.append(Paragraph("🛡️ MVP Security Assessment Report", title_style))
+            story.append(Spacer(1, 12))
+
+            # Executive Summary
+            exec_summary = report.get('executive_summary', {})
+            story.append(Paragraph("Executive Summary", styles['Heading2']))
+
+            summary_data = [
+                ['Target', report.get('target', {}).get('url', 'Unknown')],
+                ['Target Type', report.get('target', {}).get('type', 'Unknown')],
+                ['Overall Risk', exec_summary.get('overall_risk', 'Unknown')],
+                ['Security Grade', exec_summary.get('security_grade', 'Unknown')],
+                ['Total Findings', str(exec_summary.get('total_findings', 0))],
+                ['Risk Score', f"{exec_summary.get('risk_score', 0)}/100"]
+            ]
+
+            summary_table = Table(summary_data, colWidths=[2*inch, 3*inch])
+            summary_table.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                ('FONTSIZE', (0, 0), (-1, 0), 12),
+                ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+                ('GRID', (0, 0), (-1, -1), 1, colors.black)
+            ]))
+
+            story.append(summary_table)
+            story.append(Spacer(1, 12))
+
+            # Key Findings
+            story.append(Paragraph("Key Findings", styles['Heading2']))
+
+            detailed_results = report.get('detailed_results', {})
+            findings_by_category = detailed_results.get('findings_by_category', {})
+
+            for severity in ['critical', 'high', 'medium', 'low', 'info']:
+                findings = findings_by_category.get(severity, [])
+                if findings:
+                    story.append(Paragraph(f"{severity.title()} Severity ({len(findings)} findings)", styles['Heading3']))
+                    for finding in findings[:3]:  # Limit to top 3 per severity
+                        story.append(Paragraph(f"• {finding.get('description', 'No description')}", styles['Normal']))
+                    story.append(Spacer(1, 6))
+
+            # Recommendations
+            story.append(Paragraph("Recommendations", styles['Heading2']))
+            recommendations = detailed_results.get('recommendations', [])
+            for i, rec in enumerate(recommendations[:8], 1):  # Limit to top 8
+                story.append(Paragraph(f"{i}. {rec}", styles['Normal']))
+
+            story.append(Spacer(1, 12))
+
+            # AI Insights
+            ai_insights = report.get('ai_insights', {})
+            if ai_insights:
+                story.append(Paragraph("AI Insights", styles['Heading2']))
+                learning_improvements = ai_insights.get('learning_improvements', {})
+                if learning_improvements:
+                    story.append(Paragraph("Machine Learning Optimizations:", styles['Heading3']))
+                    story.append(Paragraph(f"• Agent Performance: {ai_insights.get('recommendation_confidence', 'Unknown')} confidence", styles['Normal']))
+
+            # Footer
+            story.append(Spacer(1, 24))
+            footer_style = ParagraphStyle(
+                'Footer',
+                parent=styles['Normal'],
+                fontSize=8,
+                textColor=colors.grey
+            )
+            story.append(Paragraph(f"Generated by AI Security Testing Platform v2.0 on {report.get('generated_at', 'Unknown')}", footer_style))
+
+            # Build PDF
+            doc.build(story)
+
+        except ImportError:
+            # Fallback to simple text-based PDF if ReportLab not available
+            await self._generate_simple_pdf_report(report, output_file)
+
+    async def _generate_simple_pdf_report(self, report: Dict[str, Any], output_file: str):
+        """Generate simple text-based report if ReportLab not available"""
+        # For now, save as text file with PDF extension
+        content = f"""
+🛡️ MVP SECURITY ASSESSMENT REPORT
+================================
+
+Target: {report.get('target', {}).get('url', 'Unknown')}
+Target Type: {report.get('target', {}).get('type', 'Unknown')}
+Generated: {report.get('generated_at', 'Unknown')}
+
+EXECUTIVE SUMMARY
+================
+Overall Risk: {report.get('executive_summary', {}).get('overall_risk', 'Unknown')}
+Security Grade: {report.get('executive_summary', {}).get('security_grade', 'Unknown')}
+Total Findings: {report.get('executive_summary', {}).get('total_findings', 0)}
+Risk Score: {report.get('executive_summary', {}).get('risk_score', 0)}/100
+
+KEY ISSUES
+==========
+"""
+
+        detailed_results = report.get('detailed_results', {})
+        findings_by_category = detailed_results.get('findings_by_category', {})
+
+        for severity in ['critical', 'high', 'medium', 'low']:
+            findings = findings_by_category.get(severity, [])
+            if findings:
+                content += f"\n{severity.upper()} SEVERITY ({len(findings)} findings):\n"
+                for finding in findings[:3]:
+                    content += f"• {finding.get('description', 'No description')}\n"
+
+        content += "\nRECOMMENDATIONS\n===============\n"
+        recommendations = detailed_results.get('recommendations', [])
+        for i, rec in enumerate(recommendations[:8], 1):
+            content += f"{i}. {rec}\n"
+
+        content += "\n" + "="*60 + "\n"
+        content += "Generated by AI Security Testing Platform v2.0\n"
+
+        with open(output_file, 'w') as f:
+            f.write(content)
+
+    async def _generate_html_report(self, report: Dict[str, Any], output_file: str):
+        """Generate HTML report"""
+        html_template = """
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>MVP Security Assessment Report</title>
+            <style>
+                body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
+                .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+                .section { margin: 20px 0; padding: 15px; border-left: 4px solid #667eea; background: #f8f9fa; }
+                .finding { border-left: 4px solid #ff6b6b; padding: 10px; margin: 10px 0; background: white; }
+                .finding.critical { border-left-color: #d63031; background: #fff5f5; }
+                .finding.high { border-left-color: #e17055; background: #fff8f5; }
+                .finding.medium { border-left-color: #fdcb6e; background: #fffbf0; }
+                .finding.low { border-left-color: #00b894; background: #f0fff4; }
+                .risk-score { font-size: 2em; font-weight: bold; text-align: center; padding: 20px; }
+                .risk-low { color: #00b894; }
+                .risk-medium { color: #fdcb6e; }
+                .risk-high { color: #e17055; }
+                .risk-critical { color: #d63031; }
+                table { border-collapse: collapse; width: 100%; }
+                th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                th { background-color: #667eea; color: white; }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h1>🛡️ MVP Security Assessment Report</h1>
+                <p><strong>Target:</strong> {target_url}</p>
+                <p><strong>Target Type:</strong> {target_type}</p>
+                <p><strong>Generated:</strong> {generated_at}</p>
+            </div>
+
+            <div class="section">
+                <h2>📊 Executive Summary</h2>
+                <div class="risk-score risk-{risk_class}">
+                    Security Grade: {security_grade} | Risk Score: {risk_score}/100
+                </div>
+                <table>
+                    <tr><th>Metric</th><th>Value</th></tr>
+                    <tr><td>Overall Risk Level</td><td>{overall_risk}</td></tr>
+                    <tr><td>Total Findings</td><td>{total_findings}</td></tr>
+                    <tr><td>Target Type</td><td>{target_type}</td></tr>
+                </table>
+            </div>
+
+            <div class="section">
+                <h2>🔍 Security Findings</h2>
+                {findings_html}
+            </div>
+
+            <div class="section">
+                <h2>📋 Recommendations</h2>
+                <ol>
+                    {recommendations_html}
+                </ol>
+            </div>
+
+            <div class="section">
+                <h2>🧠 AI Insights</h2>
+                <p><strong>Recommendation Confidence:</strong> {ai_confidence}</p>
+                <p><strong>Machine Learning Status:</strong> Active and learning from results</p>
+            </div>
+
+            <div style="margin-top: 40px; padding: 20px; background: #f1f3f4; border-radius: 8px; text-align: center; color: #666;">
+                <p>Generated by AI Security Testing Platform v2.0</p>
+                <p>🤖 Powered by Modular AI • 🧠 Machine Learning Enhanced • 🛡️ Continuously Improving</p>
+            </div>
+        </body>
+        </html>
+        """
+
+        # Extract data for template
+        target_info = report.get('target', {})
+        exec_summary = report.get('executive_summary', {})
+        detailed_results = report.get('detailed_results', {})
+        ai_insights = report.get('ai_insights', {})
+
+        risk_score = exec_summary.get('risk_score', 0)
+        risk_class = 'low' if risk_score < 30 else 'medium' if risk_score < 60 else 'high' if risk_score < 80 else 'critical'
+
+        # Generate findings HTML
+        findings_html = ""
+        findings_by_category = detailed_results.get('findings_by_category', {})
+        for severity in ['critical', 'high', 'medium', 'low', 'info']:
+            findings = findings_by_category.get(severity, [])
+            if findings:
+                findings_html += f'<h3>{severity.title()} Severity ({len(findings)} findings)</h3>'
+                for finding in findings:
+                    findings_html += f'''
+                    <div class="finding {severity}">
+                        <strong>{finding.get("type", "Unknown").replace("_", " ").title()}</strong><br>
+                        {finding.get("description", "No description available")}
+                    </div>
+                    '''
+
+        # Generate recommendations HTML
+        recommendations_html = ""
+        for rec in detailed_results.get('recommendations', []):
+            recommendations_html += f"<li>{rec}</li>"
+
+        # Fill template
+        html_content = html_template.format(
+            target_url=target_info.get('url', 'Unknown'),
+            target_type=target_info.get('type', 'Unknown'),
+            generated_at=report.get('generated_at', 'Unknown'),
+            security_grade=exec_summary.get('security_grade', 'Unknown'),
+            risk_score=risk_score,
+            risk_class=risk_class,
+            overall_risk=exec_summary.get('overall_risk', 'Unknown'),
+            total_findings=exec_summary.get('total_findings', 0),
+            findings_html=findings_html,
+            recommendations_html=recommendations_html,
+            ai_confidence=ai_insights.get('recommendation_confidence', 'Unknown')
+        )
+
+        with open(output_file, 'w') as f:
+            f.write(html_content)
 
     def _estimate_duration(self, pipeline_config: PipelineConfig) -> float:
         """Estimate pipeline duration in minutes"""
