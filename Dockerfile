@@ -77,9 +77,9 @@ CMD []
 
 # Labels for better maintainability
 LABEL maintainer="ARTEMIS NEXUS AI Team" \
-      version="2.0.0" \
-      description="Advanced AI Security Testing Platform with Quantum-Level Analysis" \
+      version="2.1.0" \
+      description="Advanced AI Security Testing Platform with Threat Intelligence & Quantum-Level Analysis" \
       org.opencontainers.image.title="ARTEMIS NEXUS AI" \
-      org.opencontainers.image.description="Comprehensive AI Security Testing with OWASP LLM Top 10 + Healthcare + Multi-Language Support" \
-      org.opencontainers.image.version="2.0.0" \
+      org.opencontainers.image.description="Comprehensive AI Security Testing with Advanced Threat Intelligence, OWASP LLM Top 10 + Healthcare + Multi-Language Support" \
+      org.opencontainers.image.version="2.1.0" \
       org.opencontainers.image.vendor="ARTEMIS NEXUS AI"

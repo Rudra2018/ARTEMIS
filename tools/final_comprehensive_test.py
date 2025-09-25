@@ -28,6 +28,15 @@ from typing import Dict, List, Any
 import sys
 from pathlib import Path
 
+# Add parent directory to path for imports
+sys.path.append(str(Path(__file__).parent.parent))
+
+from ai_tester_core.threat_intelligence_engine import (
+    AdvancedThreatIntelligenceEngine,
+    ThreatSeverity,
+    AttackCategory
+)
+
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
@@ -37,6 +46,7 @@ class FinalComprehensiveTester:
     def __init__(self):
         self.base_url = "https://concierge-service.stage-k8s.halodoc.com"
         self.endpoint = f"{self.base_url}/v1/conversation/retry"
+        self.threat_intelligence = AdvancedThreatIntelligenceEngine()
 
         self.headers = {
             "User-Agent": "HD customer app/24.930/android 12",
@@ -195,7 +205,7 @@ class FinalComprehensiveTester:
         return all_vectors
 
     async def execute_all_comprehensive_tests(self) -> List[Dict[str, Any]]:
-        """Execute ALL comprehensive attack vectors"""
+        """Execute ALL comprehensive attack vectors with threat intelligence"""
 
         attack_vectors = self.get_all_attack_vectors()
 
@@ -213,7 +223,16 @@ class FinalComprehensiveTester:
         print("   ✅ Garak Integration")
         print("   ✅ Research-Based Methods")
         print("   ✅ Business Logic & Compliance")
+        print("   🧠 Advanced Threat Intelligence")
         print("=" * 90)
+
+        # Initialize threat intelligence analysis
+        print("🧠 Initializing threat intelligence pre-assessment...")
+        threat_indicators = await self.threat_intelligence.generate_threat_indicators(
+            target_url=self.endpoint,
+            context={'assessment_type': 'comprehensive', 'vector_count': len(attack_vectors)}
+        )
+        print(f"🎯 Generated {len(threat_indicators)} threat indicators for analysis")
 
         for i, attack in enumerate(attack_vectors, 1):
             print(f"⚔️ [{i:03d}/{len(attack_vectors)}] {attack['category']} - {attack['type']} ({attack['severity']})")
@@ -241,6 +260,36 @@ class FinalComprehensiveTester:
 
             # Rate limiting
             await asyncio.sleep(0.8)  # Slightly faster for comprehensive test
+
+        # Post-assessment threat intelligence analysis
+        print("\n🧠 Running comprehensive threat intelligence analysis...")
+        final_threat_analysis = await self.threat_intelligence.perform_multi_layer_detection(
+            {'test_results': self.all_results, 'attack_vectors': attack_vectors},
+            threat_indicators
+        )
+
+        # Generate final threat assessment
+        threat_report = await self.threat_intelligence.generate_threat_assessment_report(
+            self.endpoint,
+            {'results': self.all_results, 'vectors': attack_vectors},
+            threat_indicators,
+            final_threat_analysis
+        )
+
+        print("=" * 90)
+        print("🧠 THREAT INTELLIGENCE ANALYSIS COMPLETE")
+        print(f"🚨 Critical Threats: {len(final_threat_analysis.get('critical_threats', []))}")
+        print(f"⚠️ High Risk Behaviors: {len(final_threat_analysis.get('high_risk_behaviors', []))}")
+        print(f"📊 Overall Risk Score: {final_threat_analysis.get('overall_risk_score', 0)}/100")
+        print("=" * 90)
+
+        # Store threat intelligence results
+        self.threat_analysis_results = {
+            'threat_indicators': threat_indicators,
+            'threat_analysis': final_threat_analysis,
+            'threat_report': threat_report,
+            'assessment_timestamp': datetime.utcnow().isoformat()
+        }
 
         return self.all_results
 

@@ -42,6 +42,12 @@ from ai_tester_core.enterprise_security_orchestrator import (
 )
 from ai_tester_core.advanced_llm_security_engine import AdvancedLLMSecurityEngine
 from ai_tester_core.garak_integration_engine import GarakIntegrationEngine, GarakModelType
+from ai_tester_core.threat_intelligence_engine import (
+    AdvancedThreatIntelligenceEngine,
+    ThreatSeverity,
+    AttackCategory,
+    ThreatIndicator
+)
 
 # Configure logging with safe file handling
 import os
@@ -78,11 +84,12 @@ class ArtemisNexusAICommander:
         self.orchestrator = EnterpriseSecurityOrchestrator(config_path)
         self.security_engine = AdvancedLLMSecurityEngine()
         self.garak_engine = GarakIntegrationEngine()
+        self.threat_intelligence = AdvancedThreatIntelligenceEngine()
 
         # Platform branding
         self.platform_name = "🏹 ARTEMIS NEXUS AI"
         self.version = "2.0.0"
-        self.tagline = "🛡️ Advanced AI Security Fortress with NVIDIA Garak Integration"
+        self.tagline = "🛡️ Advanced AI Security Fortress with Threat Intelligence & NVIDIA Garak"
 
         # Statistics
         self.session_stats = {
@@ -102,7 +109,7 @@ class ArtemisNexusAICommander:
 ║           {self.tagline}            ║
 ║                                                                              ║
 ║    🎯 Precision Vulnerability Hunting • 🛡️ NVIDIA Garak Integration         ║
-║    🧠 Dual-Engine Cross-Validation • 🌍 Global Threat Intelligence          ║
+║    🧠 Advanced Threat Intelligence • 🌍 Predictive Risk Modeling            ║
 ║    🏥 Healthcare Security • 💰 Financial Compliance • 📊 Enterprise Reports  ║
 ║    🔄 Continuous Monitoring • ⚡ Advanced AI Learning                        ║
 ║                                                                              ║
@@ -182,12 +189,20 @@ class ArtemisNexusAICommander:
                                                enable_garak: bool,
                                                garak_model_type: str,
                                                auth_config: Dict[str, Any]) -> Dict[str, Any]:
-        """Run integrated Artemis assessment with Garak"""
+        """Run integrated Artemis assessment with Garak and Threat Intelligence"""
 
         print(f"🚀 Starting Artemis integrated assessment...")
+        print(f"🧠 Initializing threat intelligence analysis...")
 
         # Prepare auth headers
         auth_headers = self._prepare_auth_headers(auth_config) if auth_config else None
+
+        # Generate threat intelligence indicators for target
+        threat_indicators = await self.threat_intelligence.generate_threat_indicators(
+            target_url=target_url,
+            context={'assessment_type': 'comprehensive', 'domain': 'ai_llm'}
+        )
+        print(f"🎯 Generated {len(threat_indicators)} threat indicators")
 
         # Run Artemis comprehensive assessment
         result = await self.security_engine.run_artemis_comprehensive_assessment(
@@ -199,11 +214,17 @@ class ArtemisNexusAICommander:
             garak_model_name=None  # Use endpoint URL
         )
 
+        # Enhance results with threat intelligence analysis
+        print(f"🔍 Running threat intelligence correlation...")
+        enhanced_result = await self._enhance_with_threat_intelligence(result, threat_indicators, target_url)
+
         return {
             'status': 'success',
-            'assessment_type': 'artemis_integrated',
+            'assessment_type': 'artemis_integrated_with_threat_intelligence',
             'target': target_url,
-            'artemis_result': result
+            'artemis_result': enhanced_result,
+            'threat_indicators': threat_indicators,
+            'threat_analysis': enhanced_result.get('threat_intelligence_analysis', {})
         }
 
     async def _run_orchestrator_assessment(self,
@@ -540,6 +561,75 @@ class ArtemisNexusAICommander:
                 self.session_stats['cross_validated_findings'] += len(
                     integrated_analysis.get('cross_validated_findings', [])
                 )
+
+    async def _enhance_with_threat_intelligence(self,
+                                              assessment_result: Dict[str, Any],
+                                              threat_indicators: List[ThreatIndicator],
+                                              target_url: str) -> Dict[str, Any]:
+        """Enhance assessment results with threat intelligence analysis"""
+
+        # Perform multi-layer threat detection
+        threat_analysis = await self.threat_intelligence.perform_multi_layer_detection(
+            assessment_result,
+            threat_indicators
+        )
+
+        # Generate threat assessment report
+        threat_report = await self.threat_intelligence.generate_threat_assessment_report(
+            target_url,
+            assessment_result,
+            threat_indicators,
+            threat_analysis
+        )
+
+        # Perform behavioral analysis
+        behavioral_analysis = await self.threat_intelligence.perform_behavioral_analysis(
+            assessment_result.get('test_results', [])
+        )
+
+        # Create enhanced result
+        enhanced_result = assessment_result.copy()
+        enhanced_result['threat_intelligence_analysis'] = {
+            'threat_detection': threat_analysis,
+            'threat_report': threat_report,
+            'behavioral_analysis': behavioral_analysis,
+            'risk_escalation': self._determine_risk_escalation(threat_analysis),
+            'recommended_actions': self._generate_threat_based_recommendations(threat_analysis)
+        }
+
+        return enhanced_result
+
+    def _determine_risk_escalation(self, threat_analysis: Dict[str, Any]) -> Dict[str, Any]:
+        """Determine if risk escalation is needed based on threat analysis"""
+        critical_threats = threat_analysis.get('critical_threats', [])
+        high_risk_behaviors = threat_analysis.get('high_risk_behaviors', [])
+
+        escalation_needed = len(critical_threats) > 0 or len(high_risk_behaviors) > 2
+
+        return {
+            'escalation_required': escalation_needed,
+            'escalation_level': 'CRITICAL' if len(critical_threats) > 0 else 'HIGH' if escalation_needed else 'NORMAL',
+            'immediate_actions': critical_threats,
+            'monitoring_required': high_risk_behaviors
+        }
+
+    def _generate_threat_based_recommendations(self, threat_analysis: Dict[str, Any]) -> List[str]:
+        """Generate recommendations based on threat intelligence analysis"""
+        recommendations = []
+
+        if threat_analysis.get('prompt_injection_detected', False):
+            recommendations.append("Implement advanced prompt injection filtering with multi-layer validation")
+
+        if threat_analysis.get('data_exfiltration_risk', False):
+            recommendations.append("Deploy data loss prevention controls and output sanitization")
+
+        if threat_analysis.get('jailbreak_attempts', 0) > 0:
+            recommendations.append("Strengthen model alignment and add jailbreak detection mechanisms")
+
+        if threat_analysis.get('adversarial_inputs', 0) > 0:
+            recommendations.append("Implement adversarial input detection and response systems")
+
+        return recommendations
 
     def _prepare_auth_headers(self, auth_config: Dict[str, Any]) -> Dict[str, str]:
         """Prepare authentication headers"""
