@@ -43,7 +43,10 @@ from ai_tester_core.enterprise_security_orchestrator import (
 from ai_tester_core.advanced_llm_security_engine import AdvancedLLMSecurityEngine
 from ai_tester_core.garak_integration_engine import GarakIntegrationEngine, GarakModelType
 
-# Configure logging
+# Configure logging with safe file handling
+import os
+os.makedirs('logs', exist_ok=True)
+
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',

@@ -23,9 +23,10 @@ RUN apt-get update && apt-get install -y \
     python3-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Create necessary directories
-RUN mkdir -p /app/{logs,reports,temp,ml_models,data} \
-    && mkdir -p /app/ai_tester_core/{learning_data,knowledge_base}
+# Create necessary directories with proper permissions
+RUN mkdir -p /app/logs /app/reports /app/temp /app/ml_models /app/data \
+    && mkdir -p /app/ai_tester_core/learning_data /app/ai_tester_core/knowledge_base \
+    && chmod -R 755 /app/logs /app/reports /app/temp /app/ml_models /app/data
 
 # Copy requirements first for better caching
 COPY requirements.txt /app/
@@ -51,7 +52,8 @@ COPY . /app/
 
 # Make scripts executable
 RUN chmod +x /app/tools/*.py \
-    && chmod +x /app/bootstrap_repo.sh
+    && chmod +x /app/bootstrap_repo.sh \
+    && chmod +x /app/entrypoint.sh
 
 # Create non-root user for security
 RUN groupadd -r artemis && useradd -r -g artemis artemis \
@@ -67,8 +69,11 @@ EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD python3 -c "import sys; sys.exit(0)" || exit 1
 
-# Default command - ARTEMIS NEXUS AI Commander
-CMD ["python3", "tools/artemis_nexus_ai_commander.py", "--help"]
+# Set entrypoint
+ENTRYPOINT ["/app/entrypoint.sh"]
+
+# Default command
+CMD []
 
 # Labels for better maintainability
 LABEL maintainer="ARTEMIS NEXUS AI Team" \
