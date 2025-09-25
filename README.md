@@ -1,15 +1,35 @@
-# ⚡ NEXUS QUANTUM - Advanced AI Security Fortress
+# 🏹 ARTEMIS NEXUS AI - Advanced AI Security Fortress
 
 > **The Ultimate AI Security Testing Platform with Quantum-Level Analysis**
 
-[![Security](https://img.shields.io/badge/Security-Quantum--Level-brightgreen)](https://github.com/nexus-quantum)
+[![Security](https://img.shields.io/badge/Security-Quantum--Level-brightgreen)](https://github.com/artemis-nexus-ai)
 [![OWASP](https://img.shields.io/badge/OWASP%20LLM%20Top%2010-Complete%20Coverage-blue)](https://owasp.org/www-project-top-10-for-large-language-model-applications/)
-[![AI Powered](https://img.shields.io/badge/AI%20Powered-Machine%20Learning-purple)](https://nexus-quantum.ai)
-[![Enterprise](https://img.shields.io/badge/Enterprise-Ready-orange)](https://enterprise.nexus-quantum.ai)
+[![AI Powered](https://img.shields.io/badge/AI%20Powered-Machine%20Learning-purple)](https://artemis-nexus.ai)
+[![Enterprise](https://img.shields.io/badge/Enterprise-Ready-orange)](https://enterprise.artemis-nexus.ai)
+[![Docker](https://img.shields.io/badge/Docker-Supported-blue?logo=docker)](https://hub.docker.com/)
 
-## 🚀 NEXUS QUANTUM - Quantum-Level AI Security Platform v2.0
+## 🚀 ARTEMIS NEXUS AI - Quantum-Level AI Security Platform v2.0
 
-**Nexus Quantum** is the world's most advanced AI security testing platform, delivering quantum-level analysis with comprehensive OWASP LLM Top 10 compliance, research-based attack techniques, and enterprise-grade orchestration.
+**ARTEMIS NEXUS AI** is the world's most advanced AI security testing platform, delivering quantum-level analysis with comprehensive OWASP LLM Top 10 compliance, research-based attack techniques, and enterprise-grade orchestration.
+
+## 🐳 Docker Deployment (Recommended)
+
+**Get started in seconds with Docker:**
+
+```bash
+# Quick Start with Docker Compose
+git clone https://github.com/your-username/ai-chatbot-security-tester.git
+cd ai-chatbot-security-tester
+docker-compose up -d
+
+# Run comprehensive security test
+docker-compose exec artemis-nexus-ai python3 tools/final_comprehensive_test.py https://target.example.com
+
+# View interactive help
+docker-compose exec artemis-nexus-ai python3 tools/artemis_nexus_ai_commander.py --help
+```
+
+**📖 Complete Docker Guide**: See [DOCKER_GUIDE.md](DOCKER_GUIDE.md) for comprehensive Docker deployment instructions.
 
 ### ⚡ **QUANTUM CAPABILITIES**
 
@@ -24,16 +44,16 @@
 
 ```bash
 # Complete AI Security Assessment
-python tools/nexus_ai_security_commander.py https://your-ai-service.com
+python tools/artemis_nexus_ai_commander.py https://your-ai-service.com
 
 # OWASP LLM Top 10 Compliance
-python tools/nexus_ai_security_commander.py https://llm.example.com --owasp-compliance
+python tools/final_comprehensive_test.py https://llm.example.com
 
 # Healthcare AI Security (HIPAA)
-python tools/nexus_ai_security_commander.py https://medical-ai.com --healthcare-assessment
+python tools/comprehensive_artemis_testing.py https://medical-ai.com --healthcare
 
-# Financial AI Security (PCI-DSS)
-python tools/nexus_ai_security_commander.py https://fintech-ai.com --financial-assessment
+# Enterprise Zero False Positive Testing
+python tools/enterprise_zero_fp_commander.py https://enterprise-ai.com --comprehensive
 ```
 
 ### 🎯 Key Features
