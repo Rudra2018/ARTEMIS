@@ -36,6 +36,12 @@ from ai_tester_core.threat_intelligence_engine import (
     ThreatSeverity,
     AttackCategory
 )
+from ai_tester_core.advanced_multi_layer_detector import (
+    AdvancedMultiLayerDetector,
+    VulnerabilityCategory,
+    ThreatLevel,
+    DetectionLayer
+)
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -47,6 +53,7 @@ class FinalComprehensiveTester:
         self.base_url = "https://concierge-service.stage-k8s.halodoc.com"
         self.endpoint = f"{self.base_url}/v1/conversation/retry"
         self.threat_intelligence = AdvancedThreatIntelligenceEngine()
+        self.multi_layer_detector = AdvancedMultiLayerDetector()
 
         self.headers = {
             "User-Agent": "HD customer app/24.930/android 12",
@@ -224,6 +231,8 @@ class FinalComprehensiveTester:
         print("   ✅ Research-Based Methods")
         print("   ✅ Business Logic & Compliance")
         print("   🧠 Advanced Threat Intelligence")
+        print("   🔍 10-Layer Security Detection")
+        print("   🚨 Automated Response Orchestration")
         print("=" * 90)
 
         # Initialize threat intelligence analysis
@@ -234,26 +243,64 @@ class FinalComprehensiveTester:
         )
         print(f"🎯 Generated {len(threat_indicators)} threat indicators for analysis")
 
+        # Initialize 10-layer security baseline
+        print("🔍 Establishing 10-layer security detection baseline...")
+        baseline_context = {
+            'target_url': self.endpoint,
+            'assessment_type': 'comprehensive_testing',
+            'total_vectors': len(attack_vectors)
+        }
+
+        # Baseline detection test
+        baseline_test = "This is a baseline test to establish normal behavior patterns"
+        baseline_result = await self.multi_layer_detector.analyze_comprehensive(baseline_test, baseline_context)
+        print(f"🛡️ Baseline established with {baseline_result['threat_summary']['total_detections']} initial detections")
+
         for i, attack in enumerate(attack_vectors, 1):
             print(f"⚔️ [{i:03d}/{len(attack_vectors)}] {attack['category']} - {attack['type']} ({attack['severity']})")
 
-            # Execute request
+            # Run 10-layer detection analysis on attack payload
+            attack_context = {
+                'target_url': self.endpoint,
+                'attack_vector': attack,
+                'test_sequence': i,
+                'user_id': f'tester_{i}',
+                'session_id': f'test_session_{i}'
+            }
+
             try:
+                # Multi-layer security analysis BEFORE sending request
+                ml_analysis = await self.multi_layer_detector.analyze_comprehensive(
+                    attack['payload'], attack_context
+                )
+
+                # Execute request
                 result = await self.send_request(attack)
+
+                # Add multi-layer detection results to the attack result
+                result['multi_layer_detection'] = ml_analysis
                 self.all_results.append(result)
 
-                # Log result
+                # Enhanced logging with multi-layer detection info
                 if result.get("error"):
                     print(f"   ❌ Error: {result['error_details']['error_message']}")
                 else:
                     status = result['actual_response']['status_code']
                     duration = result['duration_ms']
+                    ml_detections = ml_analysis['threat_summary']['total_detections']
+                    ml_threat = ml_analysis['threat_summary']['highest_threat_level']
+
                     print(f"   📡 HTTP {status} ({duration:.1f}ms)")
+                    print(f"   🔍 10-Layer: {ml_detections} threats ({ml_threat})")
 
                     if status == 200 and result['analysis']['ai_response_received']:
                         print(f"   🤖 AI Response: {result['analysis']['ai_message'][:50]}...")
                     elif status == 464:
                         print(f"   🚫 Blocked by access controls")
+
+                    # Show response orchestration if available
+                    if ml_analysis['response_orchestration']['escalation_required']:
+                        print(f"   🚨 ESCALATION REQUIRED - Response actions: {len(ml_analysis['response_orchestration']['response_actions'])}")
 
             except Exception as e:
                 print(f"   💥 Exception: {str(e)}")
@@ -281,6 +328,21 @@ class FinalComprehensiveTester:
         print(f"🚨 Critical Threats: {len(final_threat_analysis.get('critical_threats', []))}")
         print(f"⚠️ High Risk Behaviors: {len(final_threat_analysis.get('high_risk_behaviors', []))}")
         print(f"📊 Overall Risk Score: {final_threat_analysis.get('overall_risk_score', 0)}/100")
+
+        # Multi-layer detection summary
+        ml_detections_total = sum(
+            result.get('multi_layer_detection', {}).get('threat_summary', {}).get('total_detections', 0)
+            for result in self.all_results if 'multi_layer_detection' in result
+        )
+        escalations_total = sum(
+            1 for result in self.all_results
+            if result.get('multi_layer_detection', {}).get('response_orchestration', {}).get('escalation_required', False)
+        )
+
+        print("🔍 10-LAYER DETECTION SUMMARY")
+        print(f"🎯 Total Multi-Layer Detections: {ml_detections_total}")
+        print(f"🚨 Total Escalations Required: {escalations_total}")
+        print(f"🛡️ System Statistics: {self.multi_layer_detector.get_system_statistics()['detection_stats']}")
         print("=" * 90)
 
         # Store threat intelligence results
