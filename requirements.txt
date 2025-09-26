@@ -1,48 +1,119 @@
-# 🏹 ARTEMIS NEXUS AI - Python Dependencies
-# Advanced AI Security Testing Platform Requirements
+# 🏹 ARTEMIS Enterprise - Production Dependencies
+# Advanced LLM Security Testing Platform
+# Version: 2.0.0
 
-# Core Dependencies
+# ===== CORE FRAMEWORK =====
 asyncio>=3.4.3
-aiohttp>=3.8.0
-requests>=2.28.0
+aiohttp>=3.9.0
+requests>=2.31.0
 python-dateutil>=2.8.2
+pydantic>=2.0.0
+typing-extensions>=4.5.0
 
-# AI/ML Dependencies
-numpy>=1.21.0
-scikit-learn>=1.0.0
-matplotlib>=3.5.0
-seaborn>=0.11.0
+# ===== WEB FRAMEWORK =====
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+starlette>=0.27.0
+python-multipart>=0.0.6
 
-# Security Testing
-beautifulsoup4>=4.11.0
+# ===== AI/ML DEPENDENCIES =====
+numpy>=1.24.0
+scikit-learn>=1.3.0
+matplotlib>=3.7.0
+seaborn>=0.12.0
+torch>=2.0.0
+transformers>=4.30.0
+sentence-transformers>=2.2.2
+
+# ===== SECURITY TESTING =====
+beautifulsoup4>=4.12.0
 lxml>=4.9.0
-urllib3>=1.26.0
-cryptography>=3.4.0
+urllib3>=2.0.0
+cryptography>=41.0.0
 pyyaml>=6.0.0
-dnspython>=2.2.0
+dnspython>=2.4.0
+# ssl-verify>=1.0.0  # Not available in PyPI
+python-nmap>=0.7.1
 
-# Report Generation
-reportlab>=3.6.0
-fpdf2>=2.5.0
-jinja2>=3.0.0
+# ===== HTTP CLIENT ENHANCEMENTS =====
+httpx>=0.25.0
+aiofiles>=23.0.0
+python-jose[cryptography]>=3.3.0
+passlib[bcrypt]>=1.7.4
 
-# Data Processing
-pandas>=1.4.0
+# ===== DATABASE & STORAGE =====
+sqlalchemy>=2.0.0
+# sqlite3  # Built-in - no need to install
+redis>=4.5.0
+pymongo>=4.5.0
 
-# Testing Framework
-pytest>=7.0.0
-pytest-asyncio>=0.20.0
-pytest-cov>=4.0.0
+# ===== POSTMAN INTEGRATION =====
+jsonschema>=4.17.0
+jsonref>=1.1.0
 
-# Development Tools
-black>=22.0.0
-flake8>=5.0.0
-mypy>=0.991
+# ===== REPORT GENERATION =====
+reportlab>=4.0.0
+fpdf2>=2.7.0
+jinja2>=3.1.0
+markdown>=3.5.0
+weasyprint>=60.0
+# pandoc>=2.3  # System package, not Python package
 
-# Optional: Advanced ML (uncomment if needed)
-# torch>=1.12.0
-# transformers>=4.20.0
-# tensorflow>=2.9.0
+# ===== HEALTHCARE COMPLIANCE =====
+phonenumbers>=8.13.0
+python-dateutil>=2.8.2
+pytz>=2023.3
 
-# NVIDIA Garak Integration Dependencies
-# Note: Install manually if needed: pip install garak
+# ===== DATA PROCESSING =====
+pandas>=2.0.0
+openpyxl>=3.1.0
+xlsxwriter>=3.1.0
+
+# ===== TESTING FRAMEWORK =====
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+pytest-cov>=4.1.0
+pytest-mock>=3.11.0
+
+# ===== DEVELOPMENT TOOLS =====
+black>=23.0.0
+flake8>=6.0.0
+mypy>=1.5.0
+pre-commit>=3.4.0
+isort>=5.12.0
+
+# ===== CLI ENHANCEMENTS =====
+rich>=13.5.0
+typer>=0.9.0
+click>=8.1.0
+tqdm>=4.66.0
+
+# ===== CONFIGURATION =====
+python-dotenv>=1.0.0
+configparser>=6.0.0
+toml>=0.10.2
+
+# ===== LOGGING & MONITORING =====
+structlog>=23.1.0
+loguru>=0.7.0
+prometheus-client>=0.17.0
+
+# ===== NETWORK & SECURITY =====
+scapy>=2.5.0
+pyopenssl>=23.2.0
+certifi>=2023.7.22
+idna>=3.4
+
+# ===== OPTIONAL ADVANCED ML =====
+# Uncomment for advanced ML capabilities
+# ollama>=0.1.0
+# openai>=1.0.0
+# anthropic>=0.3.0
+
+# ===== DOCKER DEPENDENCIES =====
+gunicorn>=21.2.0
+supervisor>=4.2.0
+
+# ===== EXPORT FORMATS =====
+python-docx>=0.8.11
+python-pptx>=0.6.21

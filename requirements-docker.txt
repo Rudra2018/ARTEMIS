@@ -1,0 +1,42 @@
+# 🏹 ARTEMIS Enterprise - Docker Optimized Dependencies
+# Lightweight requirements for containerized deployment
+
+# Core Framework
+asyncio>=3.4.3
+aiohttp>=3.9.0
+requests>=2.31.0
+python-dateutil>=2.8.2
+pydantic>=2.0.0
+
+# Basic HTTP
+urllib3>=2.0.0
+httpx>=0.25.0
+
+# Security Testing Essentials
+beautifulsoup4>=4.12.0
+lxml>=4.9.0
+cryptography>=41.0.0
+pyyaml>=6.0.0
+
+# Report Generation
+jinja2>=3.1.0
+markdown>=3.5.0
+
+# Data Processing
+pandas>=2.0.0
+
+# CLI Enhancement
+rich>=13.5.0
+click>=8.1.0
+
+# Configuration
+python-dotenv>=1.0.0
+toml>=0.10.2
+
+# Healthcare Compliance Basics
+phonenumbers>=8.13.0
+pytz>=2023.3
+
+# Testing
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
